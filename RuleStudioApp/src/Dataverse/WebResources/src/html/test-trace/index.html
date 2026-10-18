@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test &amp; trace · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body>
+<main class="workspace">
+<div class="rs-commandbar" role="toolbar" aria-label="Test and trace commands">
+  <button type="button" class="btn cmd-back" id="cmdBack" aria-label="Back" title="Back">←</button>
+  <button type="button" class="btn primary" id="run" data-author>▷ Run simulation</button>
+  <span class="command-divider" aria-hidden="true"></span>
+  <button type="button" class="btn" id="refresh">↻ Refresh</button>
+</div>
+
+<div class="rs-pagehead"><h1>Test &amp; trace</h1><p class="rs-desc">Simulate drafts or published snapshots against a real or sample record. Side effects are mocked; nothing is written to Dataverse.</p></div>
+
+<p class="status-line" id="status" role="status" aria-live="polite">Loading rules…</p>
+
+<div class="col-main">
+<div>
+  <div class="card pad">
+    <div class="card-head"><h2 class="h3">1 · What to test</h2><span class="pill info">No changes saved</span></div>
+    <div class="view-toggle" role="group" aria-label="Test scope">
+      <button type="button" class="btn mini" id="scopeChain" aria-pressed="true">Table / event / stage chain</button>
+      <button type="button" class="btn mini" id="scopeRules" aria-pressed="false">Selected rules</button>
+    </div>
+    <div class="field-grid g3 gap-top" id="chainPickers">
+      <div class="field"><label class="form-label" for="ttTable">Target table</label><select class="select" id="ttTable" data-help="ruleTable"></select></div>
+      <div class="field"><label class="form-label" for="ttEvent">Event</label><select class="select" id="ttEvent" data-help="ruleEvent"></select></div>
+      <div class="field"><label class="form-label" for="ttStage">Stage</label><select class="select" id="ttStage" data-help="ruleStage"></select></div>
+    </div>
+    <div class="gap-top" id="rulePicker" hidden>
+      <label class="form-label" for="ruleFilter">Rules (of one table, event and stage)</label>
+      <input class="input" id="ruleFilter" type="search" placeholder="Filter by name or key">
+      <div class="rule-list" id="ruleList"></div>
+    </div>
+    <div class="field-grid gap-top">
+      <div class="field"><label class="form-label" for="versionMode">Rule version to evaluate</label><select class="select" id="versionMode" data-help="traceVersion"><option value="draft" selected>Draft where available</option><option value="live">Published only</option></select></div>
+      <div class="field"><label class="form-label" for="mockAll" data-help="mockAll"><input class="check" type="checkbox" id="mockAll" checked> Mock all functions</label><p class="muted t11">Functions with side effects are always mocked.</p></div>
+    </div>
+  </div>
+
+  <div class="card pad section-gap">
+    <h2 class="h3">2 · Record</h2>
+    <div class="field"><label class="form-label" for="recordSearch">Real record (optional): search by name</label>
+      <div class="search-row"><input class="input" id="recordSearch" data-help="traceRecord" type="search" placeholder="Type a name and press Enter"><button type="button" class="btn" id="recordFind">Search</button></div>
+      <div class="record-results" id="recordResults"></div>
+      <p class="t12" id="recordChosen"></p>
+    </div>
+    <div class="divider"></div>
+    <b class="t12">Sample values</b>
+    <p class="muted t11">Applied over the record. For Update these are the changed columns. Values are JSON (<code>20</code>, <code>true</code>, <code>"text"</code>, <code>{"table":"account","id":"…"}</code>) or plain text.</p>
+    <div id="samples"></div>
+    <button type="button" class="btn mini" id="addSample">+ Add value</button>
+  </div>
+
+  <div class="card pad section-gap">
+    <div class="card-head"><h2 class="h3">3 · Execution trace</h2><span class="pill draft" id="resultPill" hidden>Test result · full trace</span></div>
+    <div id="result"><div class="empty"><b>Ready to simulate</b><div class="muted t12">Choose what to test and run it to see evaluated conditions, actions and resulting fields.</div></div></div>
+  </div>
+</div>
+
+<aside class="sticky-aside">
+  <div class="card pad">
+    <h2 class="h3">Chain preview</h2>
+    <p class="muted t11">Draft mode substitutes your working draft for the published version of that rule.</p>
+    <div id="preview"></div>
+  </div>
+</aside>
+</div>
+</main>
+<!--SCRIPT-->
+</body>
+</html>

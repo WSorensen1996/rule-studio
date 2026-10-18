@@ -1,0 +1,20 @@
+@import "../../shared/rule-studio.css";
+
+.block { display: block; }
+.chain-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.chain-head h2 { margin: 0; }
+.chain-count { font-weight: normal; }
+.chain-pills { margin-top: 7px; }
+.chain-card .chain-meta + .pill { margin-bottom: 4px; }
+.chain-card.is-diff { border-top-color: var(--purple); background: #faf9ff; }
+.chain-card.is-inactive { opacity: .55; filter: grayscale(1); border-top-color: #b8c0cc; }
+.chain-card.is-cutoff { opacity: .5; border-style: dashed; border-top-color: var(--amber); }
+.chain-card.is-removed { opacity: .65; border-style: dashed; border-top-color: var(--red); }
+.chain-cut { flex: 0 0 56px; display: grid; place-items: center; position: relative; color: var(--red); font-size: 11px; font-weight: 600; }
+.chain-cut::before { content: ""; position: absolute; top: 8px; bottom: 8px; left: 50%; border-left: 2px dashed var(--red); }
+.chain-cut span { position: relative; background: #fff; padding: 2px 4px; }
+/* Cards wrap onto new rows instead of scrolling sideways. */
+.chain { flex-wrap: wrap; row-gap: 14px; overflow-x: visible; }
+.chain-card { flex: 0 1 250px; }
+.other-section { margin-top: 14px; }
+.chain-detail { overflow-wrap: anywhere; }

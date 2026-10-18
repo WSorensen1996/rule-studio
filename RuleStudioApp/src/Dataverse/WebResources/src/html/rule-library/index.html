@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rule library · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body>
+<main class="workspace">
+<div class="rs-commandbar" role="toolbar" aria-label="Rule library commands">
+  <button type="button" class="btn cmd-back" id="cmdBack" aria-label="Back" title="Back">←</button>
+  <button type="button" class="btn primary" id="newRule" data-author>+ New rule</button>
+  <button type="button" class="btn" id="publishSelected" disabled data-author title="Select one or more rules with a draft first.">Publish selected</button>
+  <span class="command-divider" aria-hidden="true"></span>
+  <button type="button" class="btn" id="refresh">↻ Refresh</button>
+</div>
+
+<div class="rs-pagehead"><h1>Rule library</h1><p class="rs-desc">Each rule targets one Dataverse table and event. Drafts are editable; published versions are immutable.</p></div>
+
+<p class="status-line" id="status" role="status" aria-live="polite">Loading rules…</p>
+
+<div class="card">
+  <div class="toolbar">
+    <label class="sr-only" for="librarySearch">Search rules</label>
+    <input class="input" id="librarySearch" type="search" placeholder="Search by name or key…" autocomplete="off">
+    <label class="sr-only" for="libraryTable">Table</label>
+    <select class="select" id="libraryTable"><option value="">All tables</option></select>
+    <label class="sr-only" for="libraryStatus">Status</label>
+    <select class="select" id="libraryStatus">
+      <option value="">All statuses</option>
+      <option value="draft">Has a draft</option>
+      <option value="live">Live</option>
+      <option value="unpublished">Never published</option>
+      <option value="disabled">Inactive</option>
+    </select>
+    <span class="muted t11 rule-count" id="ruleCount">—</span>
+  </div>
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead><tr><th><input class="check" type="checkbox" id="selectAll" aria-label="Select all shown rules" data-author></th><th>Rule</th><th>Trigger</th><th>Priority</th><th>Version / status</th><th>Action</th></tr></thead>
+      <tbody id="ruleRows"></tbody>
+    </table>
+    <p class="empty" id="emptyState" hidden></p>
+  </div>
+</div>
+<p class="muted t11 section-gap">Only compiled snapshots of published versions are executed by the engine. Condition and action rows are authoring data.</p>
+</main>
+<!--SCRIPT-->
+</body>
+</html>

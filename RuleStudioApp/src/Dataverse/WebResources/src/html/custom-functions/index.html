@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Custom functions · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body>
+<main class="workspace">
+<div class="rs-commandbar" role="toolbar" aria-label="Custom function commands">
+  <button type="button" class="btn cmd-back" id="cmdBack" aria-label="Back" title="Back">←</button>
+  <button type="button" class="btn primary" id="registerFunction" data-author>+ Register function</button>
+  <button type="button" class="btn" id="cmdActivate" data-help="functionEnabled" title="An inactive function cannot be chosen in new rules, and rules that call it fail when they run." disabled data-author>⏸ Deactivate</button>
+  <span class="command-divider" aria-hidden="true"></span>
+  <button type="button" class="btn" id="refresh">↻ Refresh</button>
+  <details class="rs-help"><summary aria-label="About this page" title="About this page">?</summary><div class="rs-help-pop wide">
+    <strong>What is a custom function?</strong>Code that a rule can call when conditions and actions alone are not enough: checking a VAT number, creating a task, calling another system. Each function is a Dataverse Custom API that a developer writes and deploys. Registering it here makes it available in the rule editor, so rule authors can use it without writing code.
+    <p><b>How it is used.</b> A rule calls a function as a value source, for example <i>set field "VAT number valid" to rs_ValidateVatNumber(VAT number, Country)</i>. The inputs are fields or fixed values, and the function returns Success, a Value and a Message. A <i>Call function</i> action runs one on its own, for example to create a task.</p>
+    <p><b>Registering.</b> <i>+ Register function</i> reads the Custom API's parameters, so the rule editor shows typed inputs. You also say what it returns, its timeout, and whether it has side effects or is safe to retry.</p>
+    <p><b>Side effects and tests.</b> A function that changes data or calls out (Create task, Call webhook) is marked as having side effects. In Test &amp; trace it is never really called; it returns an empty fake result.</p>
+    <p><b>Standard functions.</b> The solution ships with ValidateEmail, ValidatePhone, ValidateVatNumber, CreateTask, AssignTo and CallWebhook, ready to register and to use as examples for your own.</p>
+    <p><b>Deactivate</b> hides a function from new rules; rules that already call it fail when they run.</p>
+  </div></details>
+</div>
+
+<div class="rs-pagehead stacked"><h1>Custom function registry</h1><p class="rs-desc">Let rules call code: checks, calculations or calls to other systems that conditions and actions cannot do alone. Developers register a Dataverse Custom API once; rule authors then pick it in the rule editor.</p></div>
+
+<p class="status-line" id="status" role="status" aria-live="polite">Loading functions…</p>
+
+<div class="split">
+  <div class="card">
+    <div class="card-head"><h2 class="h3">Available functions</h2><span class="pill info" id="functionCount">—</span></div>
+    <div class="card-body" id="functionList"></div>
+  </div>
+  <div id="functionDetail"></div>
+</div>
+</main>
+<!--SCRIPT-->
+</body>
+</html>

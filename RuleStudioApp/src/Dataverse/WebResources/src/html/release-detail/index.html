@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Release details · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body>
+<main class="workspace">
+<div class="rs-commandbar" role="toolbar" aria-label="Release commands">
+  <button type="button" class="btn cmd-back" id="cmdBack" aria-label="Back" title="Back">←</button>
+  <span id="rollbackSlot"></span>
+</div>
+
+<div class="rs-summary" aria-label="Release summary">
+  <div class="rs-summary-pills" id="relState"></div>
+  <p class="rs-summary-text">Release</p>
+</div>
+<div class="rs-title"><h1 id="relName">Release details</h1></div>
+<p class="status-line" id="status" role="status" aria-live="polite">Loading release…</p>
+
+<section class="card" id="detail" aria-label="Release details" hidden><div class="card-body">
+    <div class="grid g2">
+      <div><span class="form-label">Published</span><span id="relDate">—</span></div>
+      <div><span class="form-label">Published by</span><span id="relBy">—</span></div>
+      <div><span class="form-label">Validation</span><span id="relOutcome">—</span></div>
+    </div>
+    <p class="muted t12 rel-note" id="relNote"></p>
+    <p class="t12 rel-note" id="relRestores" hidden></p>
+    <div class="divider"></div>
+    <h2 class="h3">Published rule versions</h2>
+    <div id="relRules"></div>
+    <div class="divider"></div>
+    <h2 class="h3">Validation result</h2>
+    <div id="relValidation"></div>
+</div></section>
+</main>
+<!--SCRIPT-->
+</body>
+</html>

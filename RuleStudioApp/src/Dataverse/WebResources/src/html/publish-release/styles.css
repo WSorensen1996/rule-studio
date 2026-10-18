@@ -1,0 +1,12 @@
+@import "../../shared/rule-studio.css";
+
+.dialog-form { display: flex; flex-direction: column; min-height: 100vh; }
+.field-gap { margin-top: 15px; }
+.section-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.rule-check { cursor: pointer; }
+.rule-check.unavailable { cursor: default; opacity: 0.6; }
+.version-arrow { color: var(--muted); }
+.result-rule { margin-top: 12px; }
+.result-rule-head { display: flex; align-items: center; gap: 8px; }
+.issue-line { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; font-size: 12px; }
+.issue-code { flex: none; }

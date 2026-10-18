@@ -1,0 +1,8 @@
+@import "../../shared/rule-studio.css";
+
+.overview-empty { padding: 24px 12px; margin: 0; }
+.overview-foot { margin: 0; }
+.trigger-row { margin-bottom: 16px; }
+.trigger-label { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; margin-bottom: 6px; }
+.trigger-track { height: 7px; background: #eaf0f7; border-radius: 10px; }
+.trigger-fill { height: 100%; border-radius: 10px; }

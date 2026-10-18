@@ -1,0 +1,4 @@
+@import "../../shared/rule-studio.css";
+
+.rule-count { margin-left: auto; }
+.trigger-draft { color: var(--purple); }

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Custom function · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body>
+<main class="workspace">
+<div class="rs-commandbar" role="toolbar" aria-label="Custom function commands">
+  <button type="button" class="btn cmd-back" id="cmdBack" aria-label="Back" title="Back">←</button>
+  <button type="button" class="btn" id="save" data-author>💾 Save</button>
+  <button type="button" class="btn" id="cmdSaveClose" data-author>Save &amp; close</button>
+</div>
+
+<div class="rs-summary" aria-label="Function summary">
+  <div class="rs-summary-pills" id="fnStatus"></div>
+  <p class="rs-summary-text">Custom function</p>
+</div>
+<div class="rs-title">
+  <h1 id="pageTitle">New custom function</h1>
+  <p class="rs-desc" id="intro">Register developer-authored Custom API metadata. Registration does not generate or deploy plug-in code.</p>
+</div>
+<p class="status-line" id="status" role="status" aria-live="polite"></p>
+
+<!-- Step 1: registration -->
+<section class="card" id="stepRegister" aria-label="Registration"><div class="card-body">
+  <div class="field-grid">
+    <div class="field"><label class="form-label" for="funcName">Display name</label><input class="input" id="funcName" maxlength="100" data-author></div>
+    <div class="field">
+      <div class="label-row">
+        <label class="form-label" for="customApiLogicalName">Custom API logical name</label>
+        <button type="button" class="btn mini square" id="apiPickerButton" title="Choose from this environment's Custom APIs" aria-label="Choose from this environment's Custom APIs" aria-haspopup="dialog" data-author><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/></svg></button>
+      </div>
+      <input class="input mono" id="customApiLogicalName" data-help="customApi" maxlength="200" data-author>
+    </div>
+    <div class="field"><label class="form-label" for="funcOutput">Output type</label><select class="select" id="funcOutput" data-help="outputType" data-author></select></div>
+    <div class="field"><label class="form-label" for="funcTimeout">Timeout (ms)</label><input class="input" id="funcTimeout" data-help="timeout" type="number" min="1" step="1" placeholder="Default" data-author></div>
+  </div>
+  <div class="field section-gap"><label class="form-label" for="funcDescription">Description</label><textarea class="input" id="funcDescription" rows="2" data-author></textarea></div>
+
+  <div class="label-row section-gap">
+    <h2 class="form-label">Input parameters</h2>
+    <button type="button" class="btn mini" id="addParameter" data-author>+ Add parameter</button>
+  </div>
+  <div class="notice" id="apiNotice" hidden></div>
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Table</th><th><span class="sr-only">Remove</span></th></tr></thead>
+      <tbody id="paramRows"></tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+  <div class="switchline" data-help="sideEffects"><input class="switch" type="checkbox" id="funcSideEffects" data-author><div><label for="funcSideEffects"><b class="t12">Has side effects</b></label><div class="muted t11">Tests use a mocked result instead of invoking the API.</div></div></div>
+  <div class="switchline switch-gap" data-help="safeToRetry"><input class="switch" type="checkbox" id="funcSafeRetry" checked data-author><div><label for="funcSafeRetry"><b class="t12">Safe to retry</b></label><div class="muted t11">Retries may follow the rule retry policy.</div></div></div>
+</div></section>
+
+<!-- Step 2: Custom API picker -->
+<section class="card" id="stepPicker" aria-label="Choose a Custom API" hidden><div class="card-body">
+  <div class="label-row"><h2 class="h3">Choose a Custom API</h2><button type="button" class="btn mini" id="backToRegister">Back to registration</button></div>
+  <p class="muted t12">Custom APIs registered in this environment. Picking one fills the logical name, display name, output type and input parameters.</p>
+  <div class="field section-gap"><label class="form-label" for="apiPickerSearch">Search by display name or logical name</label><input class="input" id="apiPickerSearch" placeholder="Search Custom APIs…" autocomplete="off" aria-controls="apiPickerResults"></div>
+  <p class="muted t12 status-line" role="status" id="apiCount"></p>
+  <div id="apiPickerResults"></div>
+  <div class="empty" id="apiEmpty" hidden>No Custom APIs match. Try a display name or logical name, or go back to enter a logical name manually.</div>
+</div></section>
+</main>
+<!--SCRIPT-->
+</body>
+</html>

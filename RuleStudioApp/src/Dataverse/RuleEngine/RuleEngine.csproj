@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<!--
+		The generic Rule Studio engine plug-in. A separate assembly that XrmSync does not
+		manage: it has no XrmPluginCore registrations, and its steps are owned by the step reconciler
+		(src/Dataverse/Plugins/Logic/RuleStudio/Steps). Deployed with DeployEngine; see docs/engine.md.
+		The evaluator sources are linked from the Plugins project, so live runs and simulations share them.
+	-->
+	<PropertyGroup>
+		<AssemblyName>RuleStudio.RuleEngine</AssemblyName>
+		<RootNamespace>RuleStudio.Engine</RootNamespace>
+		<TargetFramework></TargetFramework>
+		<!-- net10.0 only so the unit tests can run the engine plug-in logic. -->
+		<TargetFrameworks>net462;net10.0</TargetFrameworks>
+		<SignAssembly>False</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\..\..\RuleStudio.snk</AssemblyOriginatorKeyFile>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="..\Plugins\Logic\RuleStudio\Engine\**\*.cs" Link="Evaluator\%(RecursiveDir)%(Filename)%(Extension)" />
+		<Compile Include="..\Plugins\Logic\ArgumentNullExceptionHelper.cs" Link="Evaluator\ArgumentNullExceptionHelper.cs" />
+		<Compile Include="..\Plugins\Logic\IsExternalInit.cs" Link="Evaluator\IsExternalInit.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CoreCLR-NCalc" Version="3.1.253" />
+		<PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.48">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="System.Net.Http" Version="4.3.4" />
+		<PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.13" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+		<PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.59" />
+		<Reference Include="System.Runtime.Caching" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+		<PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.2.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Shared\SharedContext\SharedContext.csproj" />
+		<ProjectReference Include="..\..\Shared\SharedDomain\SharedDomain.csproj" />
+	</ItemGroup>
+</Project>

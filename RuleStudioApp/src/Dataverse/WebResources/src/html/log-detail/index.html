@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Execution detail · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body>
+<main class="workspace">
+<div class="rs-commandbar" role="toolbar" aria-label="Execution detail commands">
+  <button type="button" class="btn cmd-back" id="cmdBack" aria-label="Back" title="Back">←</button>
+  <button type="button" class="btn" id="openRule" disabled title="This log row has no rule.">Open rule version</button>
+  <button type="button" class="btn" id="clearFlag" data-author hidden>Clear admin flag</button>
+</div>
+
+<div class="rs-summary" aria-label="Execution summary">
+  <div class="rs-summary-pills" id="lgOutcome"></div>
+  <p class="rs-summary-text">Execution log · <span id="lgVersion"></span></p>
+</div>
+<div class="rs-title"><h1 id="lgRule">Execution detail</h1></div>
+<p class="status-line" id="status" role="status" aria-live="polite">Loading execution log…</p>
+
+<section class="card" id="detail" aria-label="Execution detail" hidden><div class="card-body">
+    <div class="grid g2">
+      <div><span class="form-label">Record</span><code id="lgRecord">—</code></div>
+      <div><span class="form-label">Execution</span><span id="lgDuration">—</span></div>
+      <div><span class="form-label">Time</span><span id="lgTime">—</span></div>
+      <div><span class="form-label">Trigger</span><span id="lgStage">—</span></div>
+    </div>
+    <div class="divider"></div>
+    <h2 class="h3">Run metadata</h2>
+    <div class="grid g2">
+      <div><span class="form-label">Correlation ID</span><code id="lgCorr" class="break">—</code></div>
+      <div><span class="form-label">Attempts</span><span id="lgAttempts">—</span></div>
+      <div><span class="form-label">Admin flag</span><span id="lgFlag">—</span></div>
+      <div><span class="form-label">Log level</span><span id="lgLevel">—</span></div>
+      <div><span class="form-label">Mode</span><span id="lgMode">—</span></div>
+    </div>
+    <div id="lgErrorBox" hidden>
+      <div class="divider"></div>
+      <h2 class="h3">Error</h2>
+      <div class="notice bad" id="lgError"></div>
+    </div>
+    <div class="divider"></div>
+    <h2 class="h3">Trace</h2>
+    <div id="lgTrace"></div>
+    <div class="divider"></div>
+    <h2 class="h3">Other rules in the same save</h2>
+    <div id="lgRelated"></div>
+</div></section>
+</main>
+<!--SCRIPT-->
+</body>
+</html>

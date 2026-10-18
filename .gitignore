@@ -1,0 +1,42 @@
+# Local tooling and private docs
+/.tools/
+/Docs/
+
+# Node / web resource build output
+node_modules/
+dist/
+*.tsbuildinfo
+npm-debug.log*
+
+# .NET build output
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user
+
+# Deploy tool run output (environment-specific)
+RuleStudioApp/*/result.json
+RuleStudioApp/*/backups/
+RuleStudioApp/*/app-validation.json
+
+# Local settings / logs
+appsettings.local.json
+*.log
+.env
+/.claude/
+.claude/settings.local.json
+
+# OS / editor
+Thumbs.db
+.DS_Store
+.idea/
+
+# Environment-specific — never commit (keep the repo importable into any environment)
+# One-off deploy scripts with hard-coded environment URL / org / app IDs
+RuleStudioApp/Deployment/
+RuleStudioApp/DeployMockups/
+# Template pipeline pointing at another tenant's environment
+RuleStudioApp/.pipelines/CopyUATToTest.yaml
+# Signing keys / certificates (each user generates their own via Setup/PostSetup)
+*.snk
+*.pfx

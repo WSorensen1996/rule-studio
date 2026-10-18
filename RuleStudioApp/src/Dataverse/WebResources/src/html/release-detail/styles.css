@@ -1,0 +1,6 @@
+@import "../../shared/rule-studio.css";
+
+.rel-note { margin: 12px 0 0; }
+.rel-pills { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.issue { margin-top: 8px; }
+.issue-head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }

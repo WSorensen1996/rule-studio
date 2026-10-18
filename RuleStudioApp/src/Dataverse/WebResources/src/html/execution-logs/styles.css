@@ -1,0 +1,10 @@
+@import "../../shared/rule-studio.css";
+
+.log-filters { align-items: flex-end; }
+.filter-field { display: flex; flex-direction: column; min-width: 150px; flex: 1 1 150px; max-width: 220px; }
+.filter-check { display: flex; gap: 6px; align-items: center; font-size: 12px; min-height: 38px; }
+.filter-actions { margin-left: auto; }
+.log-count { padding: 8px 16px 0; }
+.policy-name { width: 105px; }
+.link-button { background: none; border: 0; padding: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.link-button:hover { text-decoration: underline; }

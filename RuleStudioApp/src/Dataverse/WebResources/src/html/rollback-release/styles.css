@@ -1,0 +1,5 @@
+@import "../../shared/rule-studio.css";
+
+body.rs-dialog { display: flex; flex-direction: column; min-height: 100vh; }
+.section-gap { margin-top: 15px; }
+.plan-pills { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }

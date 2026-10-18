@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Execution logs · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body>
+<main class="workspace">
+<div class="rs-commandbar" role="toolbar" aria-label="Execution log commands">
+  <button type="button" class="btn cmd-back" id="cmdBack" aria-label="Back" title="Back">←</button>
+  <button type="button" class="btn primary" id="testRule">Test a rule</button>
+  <span class="command-divider" aria-hidden="true"></span>
+  <button type="button" class="btn" id="refresh">↻ Refresh</button>
+  <details class="rs-help"><summary aria-label="About this page" title="About this page">?</summary><div class="rs-help-pop">Blocked saves roll back their own log rows; the engine writes them to the plug-in trace log instead.</div></details>
+</div>
+
+<div class="rs-pagehead"><h1>Execution logs</h1><p class="rs-desc">Production and test outcomes, with configured trace granularity and correlated run metadata.</p></div>
+
+<p class="status-line" id="status" role="status" aria-live="polite">Loading execution logs…</p>
+
+<div class="card">
+  <form class="toolbar log-filters" id="filters">
+    <label class="filter-field"><span class="form-label">Rule</span><select class="select" id="fRule"><option value="">All rules</option></select></label>
+    <label class="filter-field"><span class="form-label">Table</span><input class="input" id="fTable" placeholder="e.g. quote" autocomplete="off"></label>
+    <label class="filter-field"><span class="form-label">Outcome</span><select class="select" id="fOutcome" data-help="logOutcome"><option value="">Any outcome</option><option value="errors">Failures &amp; blocks</option></select></label>
+    <label class="filter-field"><span class="form-label">From</span><input class="input" type="date" id="fFrom"></label>
+    <label class="filter-field"><span class="form-label">To</span><input class="input" type="date" id="fTo"></label>
+    <label class="filter-field"><span class="form-label">Runs</span><select class="select" id="fMode" data-help="logMode"><option value="all">Production and tests</option><option value="production">Production only</option><option value="test">Test runs only</option></select></label>
+    <label class="filter-field"><span class="form-label">Correlation ID</span><input class="input mono" id="fCorrelation" data-help="correlationId" placeholder="All saves" autocomplete="off"></label>
+    <label class="filter-check" data-help="adminFlag"><input type="checkbox" id="fFlagged"> Admin flag only</label>
+    <div class="btn-group filter-actions">
+      <button type="submit" class="btn primary">Apply</button>
+      <button type="button" class="btn" id="clearFilters">Clear</button>
+    </div>
+  </form>
+  <div class="card-head log-count"><span class="muted t11" id="logCount">—</span></div>
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead><tr><th>Time</th><th>Rule</th><th>Outcome</th><th>Trigger</th><th>Duration</th><th>Attempts</th><th>Mode</th><th>Correlation</th><th><span class="sr-only">Inspect</span></th></tr></thead>
+      <tbody id="logRows"></tbody>
+    </table>
+  </div>
+  <p class="empty" id="emptyState" hidden>No execution logs match these filters. The engine writes a row per rule run according to each rule's log level.</p>
+</div>
+
+<div class="grid g2 section-gap">
+  <div class="card pad">
+    <h2 class="h3">Logging policy</h2>
+    <p class="muted t12">A rule without its own level uses Errors only. Test runs always use full trace. After-save failures are always logged and flagged for an admin.</p>
+    <div class="list-line"><b class="t12 policy-name">Off</b><span class="muted t11">No production log row</span></div>
+    <div class="list-line"><b class="t12 policy-name">Errors only</b><span class="muted t11">Failures and blocked saves · production default</span></div>
+    <div class="list-line"><b class="t12 policy-name">Summary</b><span class="muted t11">Outcome and duration</span></div>
+    <div class="list-line"><b class="t12 policy-name">Full trace</b><span class="muted t11">Condition results, before/after fields, function outcomes</span></div>
+  </div>
+  <div class="card pad">
+    <h2 class="h3">Retention &amp; administration</h2>
+    <p class="muted t12">Logs stay in Dataverse (v1). Two daily bulk-delete jobs remove old rows; scheduling again replaces them. Requires the Bulk Delete privilege (System Administrator).</p>
+    <div class="grid g2">
+      <div class="field"><label class="form-label" for="retDays">Keep logs (days)</label><input class="input" type="number" min="1" max="3650" id="retDays" data-help="retentionDays" value="30" data-author></div>
+      <div class="field"><label class="form-label" for="retErrorDays">Keep failed and blocked runs (days)</label><input class="input" type="number" min="1" max="3650" id="retErrorDays" data-help="retentionErrorDays" value="90" data-author></div>
+    </div>
+    <div class="btn-group section-gap"><button type="button" class="btn" id="retSchedule" data-author>Schedule retention jobs</button></div>
+    <p class="t12" id="retJobs" role="status" aria-live="polite">Checking scheduled jobs…</p>
+  </div>
+</div>
+</main>
+<!--SCRIPT-->
+</body>
+</html>

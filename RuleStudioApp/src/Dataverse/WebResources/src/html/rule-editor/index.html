@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rule editor · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body>
+<main class="workspace">
+<div class="rs-commandbar" role="toolbar" aria-label="Rule editor commands">
+  <button type="button" class="btn cmd-back" id="cmdBack" aria-label="Back" title="Back">←</button>
+  <button type="button" class="btn" id="save" data-author>💾 Save draft</button>
+  <button type="button" class="btn" id="cmdSaveClose" data-author>Save &amp; close</button>
+  <button type="button" class="btn" id="cmdTest">⚗ Test rule</button>
+  <button type="button" class="btn primary" id="cmdPublish" disabled data-author>⇪ Publish</button>
+  <button type="button" class="btn" id="cmdDiscard" data-author>⟲ Discard draft</button>
+  <button type="button" class="btn" id="cmdDelete" data-author>🗑 Delete rule</button>
+  <button type="button" class="btn" id="cmdCopy" data-author>⧉ Copy rule</button>
+  <button type="button" class="btn" id="cmdViewLive">👁 View live</button>
+  <span class="command-divider" aria-hidden="true"></span>
+  <button type="button" class="btn" id="cmdActivate" data-help="ruleEnabled" title="An inactive rule never runs, even when published. Applies as soon as you save." data-author>⏸ Deactivate</button>
+  <span class="command-divider" aria-hidden="true"></span>
+  <button type="button" class="btn" id="cmdTimeline">⇄ Timeline</button>
+  <button type="button" class="btn" id="cmdHistory">↺ Version history</button>
+</div>
+
+<div class="rs-summary" aria-label="Rule summary">
+  <div class="rs-summary-pills" id="ruleStatus"></div>
+  <p class="rs-summary-text" id="ruleSub">—</p>
+</div>
+<div class="rs-title">
+  <h1><span class="sr-only">Rule editor</span><input class="rule-title-input" id="ruleName" aria-label="Rule name" title="Edit rule name" placeholder="Name this rule" autocomplete="off" data-author></h1>
+</div>
+
+<p class="status-line" id="status" role="status" aria-live="polite">Loading rule…</p>
+<div class="notice info editing-notice" id="editingNotice" hidden></div>
+
+<section class="card readout" id="editor-readout" aria-label="The rule in plain words">
+  <div class="card-head"><div class="grow"><h2 class="h3">In plain words</h2><p class="rs-desc">The rule read back as one sentence. Updates as you edit.</p></div></div>
+  <div class="card-body"><p class="readout-text" id="readout"></p></div>
+</section>
+
+<div class="form-tabs" role="tablist" aria-label="Rule sections">
+  <button type="button" role="tab" data-tab="builder" aria-selected="true" class="active" id="tabBuilder">Rule builder</button>
+  <button type="button" role="tab" data-tab="history" aria-selected="false" id="tabHistory">Version history &amp; rollback</button>
+</div>
+
+<div data-tab-panel="builder" id="builder">
+
+<section class="card form-section folded" id="editor-about">
+  <div class="section-title"><span class="secindex">0</span><div class="grow"><span class="phase">RULE</span><h2 class="h3">About this rule</h2><p class="rs-desc">Key and description: how the rule is found and promoted.</p><span class="sec-sum" data-summary="editor-about"></span></div><span class="twist" aria-hidden="true">▾</span></div>
+  <div class="card-body">
+    <div class="field-grid g2">
+      <div class="field"><label class="form-label" for="ruleKey">Unique rule key</label><input class="input mono" id="ruleKey" data-help="ruleKey" autocomplete="off" data-author><div class="hint">Stable across Dev, Test, UAT and Prod.</div></div>
+      <div class="field"><label class="form-label" for="ruleDesc">Description</label><input class="input" id="ruleDesc" autocomplete="off" data-author></div>
+    </div>
+  </div>
+</section>
+
+<section class="card form-section folded" id="editor-identity">
+  <div class="section-title"><span class="secindex">1</span><div class="grow"><span class="phase">WHEN</span><h2 class="h3">Trigger</h2><p class="rs-desc">Which Dataverse record event wakes this rule up?</p><span class="sec-sum" data-summary="editor-identity"></span></div><span class="twist" aria-hidden="true">▾</span></div>
+  <div class="card-body">
+    <div class="trigger-block trigger-top">
+      <div>
+        <div class="sub-h">Which record?</div>
+        <div class="table-pick" data-help="ruleTable"><span class="table-ico" id="ruleTableIcon" aria-hidden="true">?</span><div class="grow"><b id="ruleTableLabel">Choose a table</b><input class="table-input mono" id="ruleTable" data-help="ruleTable" list="tableNames" autocomplete="off" aria-label="Target table · logical name" placeholder="logical name, e.g. quote" data-author></div></div>
+        <datalist id="tableNames"></datalist>
+        <div class="hint">Any Dataverse table. Field paths in conditions start here.</div>
+      </div>
+      <div class="field"><label class="sub-h" for="ruleFiltered">Only when these columns change <small>Update only · empty = any update</small></label><input class="input mono" id="ruleFiltered" data-help="ruleFiltered" autocomplete="off" data-author><div class="hint">Comma-separated logical names.</div></div>
+    </div>
+    <div class="trigger-block">
+      <div class="sub-h">What happens to it?</div>
+      <div class="opt-cards" data-help="ruleEvent">
+        <button type="button" class="select-card" data-card="ruleEvent" data-value="126250000" data-author><b>Created</b><span>a new record is saved</span></button>
+        <button type="button" class="select-card" data-card="ruleEvent" data-value="126250001" data-author><b>Updated</b><span>an existing record is saved</span></button>
+        <button type="button" class="select-card" data-card="ruleEvent" data-value="126250002" data-author><b>Deleted</b><span>a record is deleted</span></button>
+      </div>
+      <select class="sr-only" id="ruleEvent" aria-label="Event" data-help="ruleEvent" tabindex="-1" aria-hidden="true" data-author></select>
+    </div>
+    <div class="trigger-block">
+      <div class="sub-h">When exactly?</div>
+      <div class="opt-cards" data-help="ruleStage">
+        <button type="button" class="select-card" data-card="ruleStage" data-value="126250000" data-author><b>Before save</b><span>can block the save or change fields on it</span></button>
+        <button type="button" class="select-card" data-card="ruleStage" data-value="126250001" data-author><b>After save</b><span>runs afterwards · can't block · a field change makes a second update</span></button>
+      </div>
+      <select class="sr-only" id="ruleStage" aria-label="Execution stage" data-help="ruleStage" tabindex="-1" aria-hidden="true" data-author></select>
+    </div>
+  </div>
+</section>
+
+<section class="card form-section folded" id="editor-conditions">
+  <div class="section-title"><span class="secindex">2</span><div class="grow"><span class="phase">IF</span><h2 class="h3">Conditions</h2><p class="rs-desc">Build field path → operator → value rows, with AND/OR grouping and child-record aggregates.</p><span class="sec-sum" data-summary="editor-conditions"></span></div><span id="conditionCount"></span><span class="twist" aria-hidden="true">▾</span></div>
+  <div class="card-body">
+    <div id="conditionTree"></div>
+    <div class="option-foot">Parent paths return a value; child paths use Any / All / None-of or aggregates.</div>
+  </div>
+</section>
+
+<section class="card form-section folded" id="editor-actions">
+  <div class="section-title"><span class="secindex">3</span><div class="grow"><span class="phase">THEN</span><span class="phase muted">ELSE</span><h2 class="h3">Actions</h2><p class="rs-desc">Run actions in order when conditions match; optionally run an alternate branch when they do not.</p><span class="sec-sum" data-summary="editor-actions"></span></div><details class="rs-help"><summary aria-label="About actions" title="About actions">?</summary><div class="rs-help-pop"><strong>Action permissions depend on stage</strong>Block save is valid only Before save. After save cannot alter or block the original save; a Set field there creates a follow-up update.</div></details><span class="twist" aria-hidden="true">▾</span></div>
+  <div class="card-body">
+    <div id="actionLists"></div>
+  </div>
+</section>
+
+<section class="card form-section folded" id="editor-runtime">
+  <div class="section-title"><span class="secindex">4</span><div class="grow"><span class="phase muted">SETTINGS</span><h2 class="h3">Order, safety &amp; runtime</h2><p class="rs-desc">Control what happens when this rule matches or fails.</p><span class="sec-sum" data-summary="editor-runtime"></span></div><span class="twist" aria-hidden="true">▾</span></div>
+  <div class="card-body">
+    <div class="field-grid g3">
+      <div class="field"><label class="form-label" for="vPriority">Priority (lowest runs first)</label><input class="input" id="vPriority" data-help="priority" type="number" min="0" data-author></div>
+      <div class="field"><label class="form-label" for="vFailure">On failure</label><select class="select" id="vFailure" data-help="failurePolicy" data-author></select></div>
+      <div class="field"><label class="form-label" for="vRunAs">Run as</label><select class="select" id="vRunAs" data-help="runAs" data-author></select><div class="hint">System may grant elevated privileges.</div></div>
+      <div class="field"><label class="form-label" for="vRetries">Retry count</label><input class="input" id="vRetries" data-help="retryCount" type="number" min="0" data-author></div>
+      <div class="field"><label class="form-label" for="vDelay">Retry delay (ms)</label><input class="input" id="vDelay" data-help="retryDelay" type="number" min="0" data-author></div>
+      <div class="field"><label class="form-label" for="vLog">Execution log level</label><select class="select" id="vLog" data-help="logLevel" data-author></select></div>
+    </div>
+    <div class="divider"></div>
+    <div class="switchline" data-help="stopProcessing"><input class="switch" type="checkbox" id="vStop" aria-label="Stop processing after match" data-author><div><b class="t12">Stop processing after match</b><div class="muted t11">Skip all later rules in this same table / event / stage chain.</div></div></div>
+    <div class="field note-field"><label class="form-label" for="vNote">Version change note</label><input class="input" id="vNote" data-help="versionNote" autocomplete="off" data-author><div class="hint">Shown in the immutable version history and release review.</div></div>
+  </div>
+</section>
+
+<section class="card form-section folded" id="editor-activity">
+  <div class="section-title"><span class="secindex">5</span><div class="grow"><span class="phase muted">ACTIVITY</span><h2 class="h3">Rule latency &amp; frequency</h2><p class="rs-desc">Observed activity for this rule in the retained execution logs</p><span class="sec-sum" data-summary="editor-activity"></span></div><span class="twist" aria-hidden="true">▾</span></div>
+  <div class="card-body" id="activity"><p class="muted t12">Loading…</p></div>
+</section>
+</div>
+
+<div data-tab-panel="history" hidden>
+  <div class="card">
+    <div class="card-head"><h2 class="h3">Immutable version history</h2><button type="button" class="btn mini" id="createDraft" data-author>Create draft from live</button><details class="rs-help"><summary aria-label="About version history" title="About version history">?</summary><div class="rs-help-pop">Publishing stores the compiled JSON snapshot and hash on Rule Version. Restoring an older version creates a new release; history is never overwritten.</div></details></div>
+    <div class="card-body">
+      <div id="historyList"></div>
+    </div>
+  </div>
+</div>
+</main>
+<!--SCRIPT-->
+</body>
+</html>

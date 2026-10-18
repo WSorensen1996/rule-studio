@@ -1,0 +1,8 @@
+/* Trace rendering (shared/traceView.ts) on top of the shared timeline & trace styles. */
+.trace-line.l1 { padding-left: 16px; }
+.trace-line.l2 { padding-left: 32px; }
+.trace-line.l3 { padding-left: 48px; }
+.trace-error { color: var(--red); }
+.trace-table { width: 100%; overflow-x: auto; }
+.step-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.verdict-title { margin: 12px 0 5px; font-size: 20px; }

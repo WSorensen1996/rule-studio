@@ -1,0 +1,15 @@
+@import "../../shared/rule-studio.css";
+@import "../../shared/trace-view.css";
+
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.card-head h2 { margin: 0; }
+.gap-top { margin-top: 14px; }
+.view-toggle { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+.view-toggle .btn[aria-pressed="true"] { outline: 2px solid #bdb9fb; font-weight: 600; }
+.rule-list { max-height: 240px; overflow-y: auto; border: 1px solid var(--line, #e2e6ee); border-radius: 6px; margin-top: 6px; }
+.rule-list label { display: flex; gap: 8px; align-items: center; padding: 6px 10px; font-size: 12px; }
+.search-row { display: flex; gap: 6px; }
+.search-row .input { flex: 1; min-width: 0; }
+.record-results button { margin-top: 4px; }
+.sample-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 6px; margin-bottom: 6px; }
+.record-results { display: flex; flex-wrap: wrap; gap: 4px; }

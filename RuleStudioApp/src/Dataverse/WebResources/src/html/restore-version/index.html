@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Restore a previous version · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body class="rs-dialog">
+<div class="dialog-body">
+  <div class="rs-introhead"><p class="rs-intro">You are restoring the logic of <b id="restoreTarget">this version</b> into a new editable draft. You can inspect and test it before publishing.</p><details class="rs-help"><summary aria-label="About restoring" title="About restoring">?</summary><div class="rs-help-pop"><strong>History is never overwritten</strong>The restored draft gets the next version number. The live version keeps running until the draft is published.</div></details></div>
+  <p class="status-line" id="status" role="status" aria-live="polite"></p>
+  <div class="notice section-gap" id="replaceNotice" hidden></div>
+</div>
+<div class="dialog-foot">
+  <button type="button" class="btn" id="cancel">Cancel</button>
+  <button type="button" class="btn primary" id="confirm" data-author disabled>Create restore draft</button>
+</div>
+<!--SCRIPT-->
+</body>
+</html>

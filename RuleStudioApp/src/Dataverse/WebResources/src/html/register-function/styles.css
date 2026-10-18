@@ -1,0 +1,9 @@
+@import "../../shared/rule-studio.css";
+
+.label-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 5px; }
+.label-row .form-label { margin: 0; }
+.switch-gap { margin-top: 12px; }
+.api-choice { justify-content: space-between; text-align: left; margin-top: 8px; white-space: normal; }
+.api-unique { display: block; font-weight: 400; margin-top: 4px; }
+#paramRows .input, #paramRows .select { min-width: 0; width: 100%; }
+#apiNotice { margin-bottom: 10px; }

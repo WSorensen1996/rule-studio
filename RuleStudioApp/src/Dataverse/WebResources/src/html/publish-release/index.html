@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validate &amp; publish release · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body class="rs-dialog">
+<form class="dialog-form" id="releaseForm" novalidate>
+<div class="dialog-body">
+  <p class="rs-intro">The selected drafts become a single immutable release. If validation fails, none of them publish.</p>
+  <p class="status-line" id="status" role="status" aria-live="polite"></p>
+  <div class="field"><label class="form-label" for="releaseName">Release name</label><input class="input" id="releaseName" data-help="releaseName" maxlength="200" required autocomplete="off" data-author></div>
+  <div class="field field-gap"><label class="form-label" for="releaseDescription">Description</label><textarea class="input" id="releaseDescription" rows="2" maxlength="2000" data-author></textarea></div>
+  <div class="divider"></div>
+  <div class="section-row"><h2 class="h3">Versions included</h2><span class="muted t11" id="selectionCount"></span></div>
+  <div id="ruleList"></div>
+  <div class="divider"></div>
+  <div id="validation"><p class="muted t12">Validate the selection to run the publish checks. Publishing is enabled once validation passes.</p></div>
+</div>
+<div class="dialog-foot">
+  <button type="button" class="btn" id="cancel">Cancel</button>
+  <button type="button" class="btn" id="validate" data-author>Validate</button>
+  <button type="submit" class="btn primary" id="publish" data-author disabled>Publish release</button>
+</div>
+</form>
+<!--SCRIPT-->
+</body>
+</html>

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Opt-in tests against a real Dataverse environment. They are skipped unless RULESTUDIO_LIVE_URL is
+    set, so `dotnet test` and CI never touch an environment. See README.md in this folder.
+  -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <NoWarn>$(NoWarn);NU1608</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DataverseConnection" Version="1.2.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Shared\SharedContext\SharedContext.csproj" />
+    <Compile Include="..\Tests\RuleStudio\RuleRows.cs" Link="RuleRows.cs" />
+  </ItemGroup>
+
+</Project>

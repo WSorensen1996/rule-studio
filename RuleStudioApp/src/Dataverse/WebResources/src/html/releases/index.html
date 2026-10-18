@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Releases &amp; versions · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body>
+<main class="workspace">
+<div class="rs-commandbar" role="toolbar" aria-label="Release commands">
+  <button type="button" class="btn cmd-back" id="cmdBack" aria-label="Back" title="Back">←</button>
+  <button type="button" class="btn primary" id="publish" data-author>Validate &amp; publish…</button>
+  <button type="button" class="btn" id="openLibrary">Open rule library</button>
+  <span class="command-divider" aria-hidden="true"></span>
+  <button type="button" class="btn" id="refresh">↻ Refresh</button>
+  <details class="rs-help"><summary aria-label="About this page" title="About this page">?</summary><div class="rs-help-pop"><strong>No author approval step in v1</strong>Within one environment an authorized Rule Author publishes directly. Approval gates appear in the separate Dev → Test → UAT → Prod deployment pipeline — not in the rule editor.</div></details>
+</div>
+
+<div class="rs-pagehead"><h1>Releases &amp; versions</h1><p class="rs-desc">Publish one or several rule drafts atomically. A release can later be rolled back as a unit.</p></div>
+
+<p class="status-line" id="status" role="status" aria-live="polite">Loading releases…</p>
+
+<div class="grid g3">
+  <div class="metric"><div class="muted t12">Recorded releases</div><div class="num" id="releaseCount">—</div><div class="meta">Each publish records one release</div></div>
+  <div class="metric"><div class="muted t12">Live releases</div><div class="num" id="liveCount">—</div><div class="meta">Not rolled back or failed</div></div>
+  <div class="metric"><div class="muted t12">Published rule versions</div><div class="num" id="versionCount">—</div><div class="meta">Across all recorded releases</div></div>
+</div>
+
+<div class="card section-gap">
+  <div class="card-head"><h2 class="h3">Release history</h2><span class="muted t11">Latest first</span></div>
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead><tr><th>Release</th><th>Published</th><th>Scope</th><th>Validation</th><th>State</th><th>Operations</th></tr></thead>
+      <tbody id="releaseRows"></tbody>
+    </table>
+  </div>
+  <p class="empty" id="emptyState" hidden>No releases yet. A release is recorded each time drafts are published with Validate &amp; publish; it then appears here.</p>
+</div>
+</main>
+<!--SCRIPT-->
+</body>
+</html>

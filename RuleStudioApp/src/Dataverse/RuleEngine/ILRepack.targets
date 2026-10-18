@@ -1,0 +1,14 @@
+<Project>
+	<!-- Merge dependencies into one signed engine assembly (Merged.RuleStudio.RuleEngine.dll), uploaded by DeployEngine.
+	     XrmPluginCore is deliberately left out: the engine has no XrmPluginCore registrations. -->
+	<Target Name="MergeEngineAssembly" AfterTargets="Build" Condition="'$(TargetFramework)' == 'net462'">
+		<ItemGroup>
+			<EngineInputAssemblies Include="$(TargetPath)" />
+			<EngineCandidates Include="Microsoft.Bcl.AsyncInterfaces;Microsoft.Extensions.DependencyInjection.Abstractions;Microsoft.Extensions.DependencyInjection;Microsoft.Extensions.Logging.Abstractions;Newtonsoft.Json;NCalc;Antlr4.Runtime.Standard;SharedContext;SharedDomain;System.Threading.Tasks.Extensions;System.Text.Json" />
+			<EngineInputAssemblies Include="@(EngineCandidates->'$(TargetDir)%(Identity).dll')" Condition="Exists('$(TargetDir)%(Identity).dll')" />
+		</ItemGroup>
+		<ILRepack InputAssemblies="@(EngineInputAssemblies)" OutputFile="$(TargetDir)Merged.$(TargetFileName)"
+		          KeyFile="$(MSBuildProjectDirectory)/../../../RuleStudio.snk"
+		          LibraryPath="$(TargetFrameworkDirectory);$(TargetDir)" Parallel="true" />
+	</Target>
+</Project>

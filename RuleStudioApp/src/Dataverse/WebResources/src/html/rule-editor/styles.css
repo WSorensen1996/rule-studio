@@ -1,0 +1,81 @@
+@import "../../shared/rule-studio.css";
+
+.editing-notice { margin-bottom: 14px; }
+
+.trigger-top { display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 1fr); gap: 24px; align-items: start; }
+.trigger-top .table-pick { max-width: none; }
+.trigger-top .input { min-height: 56px; }
+@media (max-width: 800px) { .trigger-top { grid-template-columns: 1fr; gap: 14px; } }
+.note-field { margin-top: 15px; }
+.history-notice { margin-bottom: 15px; }
+
+.group-title { display: flex; align-items: center; gap: 8px; }
+.group-operator { width: 77px; min-height: 30px; font-size: 11px; }
+.group-children > .editor-placeholder { padding: 12px; }
+
+
+.range-inputs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 5px; align-items: center; }
+.value-holder .select[multiple] { min-height: 70px; }
+
+.branch { margin-bottom: 19px; }
+.branch-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 11px; }
+.branch-head .action-branch { margin: 0; }
+.action-type { max-width: 270px; }
+.action-line.one { grid-template-columns: 1fr; }
+.action-line.two { grid-template-columns: 1fr 1.4fr; }
+.set-field-line { grid-template-columns: 1fr 140px 1.4fr; }
+
+.mapping-grid { margin-top: 9px; }
+.mapping-line { display: grid; grid-template-columns: 120px 1fr auto; gap: 5px; }
+.mapping-note { margin: 9px 0 0; }
+
+.trend-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+
+/* Phase markers (WHEN / IF / THEN / ELSE / SETTINGS / ACTIVITY) in the numbered section headers */
+.section-title .grow { align-items: center; }
+.phase { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 100px; font-size: 10.5px; font-weight: 760; letter-spacing: .3px; white-space: nowrap; background: var(--purple-l); color: var(--purple); flex-shrink: 0; }
+.phase.muted { background: #f1f3f5; color: #6c7887; }
+.section-title .phase + .phase { margin-left: -4px; }
+
+/* Step rail: a line from one numbered section to the next */
+#builder > .form-section { position: relative; }
+#builder > .form-section:not(:last-child)::after { content: ""; position: absolute; left: 35px; bottom: -17px; width: 2px; height: 17px; background: #d8dbfb; }
+
+/* In plain words */
+.readout { margin-bottom: 16px; }
+.readout .card-body { padding: 14px 21px; }
+.readout-text { margin: 0; font-size: 13.5px; line-height: 1.75; }
+.readout-text .phase { padding: 1px 7px; margin-right: 3px; vertical-align: 1px; }
+.readout-text .rs-v { font-weight: 700; color: var(--ink); }
+.readout-text .rs-join { font-weight: 700; color: var(--purple); }
+.readout-text code { font-size: 12px; }
+
+/* Section 1 layout: which record → what happens → when → columns → about this rule */
+.trigger-block { margin-bottom: 18px; }
+.sub-h { display: block; color: #54637b; font-size: 11.5px; font-weight: 770; margin: 0 0 7px; }
+.sub-h small { font-weight: 500; color: #8892a6; font-size: 10.5px; }
+.table-pick { display: flex; align-items: center; gap: 10px; border: 1px solid #d9e1ec; border-radius: 7px; padding: 7px 11px; background: #fff; max-width: 440px; }
+.table-pick:focus-within { border-color: #746bea; box-shadow: 0 0 0 3px #746bea1a; }
+.table-pick .grow { flex: 1; min-width: 0; }
+.table-pick b { display: block; font-size: 12.5px; }
+.table-ico { width: 28px; height: 28px; border-radius: 8px; background: var(--purple-l); color: var(--purple); display: grid; place-items: center; font-weight: 850; font-size: 12px; flex-shrink: 0; }
+.table-input { border: 0; outline: 0; padding: 0; width: 100%; font-size: 11px; color: var(--muted); background: transparent; }
+.table-input:disabled { background: transparent; }
+.opt-cards { display: flex; flex-wrap: wrap; gap: 9px; }
+.opt-cards .select-card { width: auto; flex: 0 1 230px; margin: 0; padding: 11px 13px; }
+.select-card b { display: block; font-size: 12px; font-weight: 760; }
+.select-card span { font-size: 11px; color: var(--muted); }
+.select-card[aria-pressed="true"] b::before { content: "✓ "; }
+.trigger-block:last-child { margin-bottom: 0; }
+
+/* Foldable sections: click the header; a folded section shows a one-line summary */
+.form-section > .section-title { cursor: pointer; user-select: none; }
+.twist { color: var(--muted); font-size: 11px; margin-left: 10px; transition: transform .15s; }
+.form-section.folded > .card-body { display: none; }
+.form-section.folded > .section-title { border-bottom: 0; }
+.form-section.folded .twist { transform: rotate(-90deg); }
+.sec-sum { display: none; font-size: 12px; color: #54637b; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.form-section.folded .sec-sum { display: block; }
+.form-section.folded .section-title .rs-desc { display: none; }
+@media (max-width: 800px) { .opt-cards .select-card { flex: 1 1 100%; } }
+.trigger-block .hint { font-size: 10.5px; color: #8892a6; margin: 5px 0 0; }

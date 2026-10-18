@@ -1,0 +1,5 @@
+@import "../../shared/rule-studio.css";
+@import "../../shared/trace-view.css";
+
+.break { word-break: break-all; }
+.related-pills { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; align-items: center; }

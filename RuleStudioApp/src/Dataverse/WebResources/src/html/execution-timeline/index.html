@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Execution timeline · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body>
+<main class="workspace">
+<div class="rs-commandbar" role="toolbar" aria-label="Execution timeline commands">
+  <button type="button" class="btn cmd-back" id="cmdBack" aria-label="Back" title="Back">←</button>
+  <button type="button" class="btn primary" id="testChain" title="Simulate this chain in Test &amp; trace.">Test this chain</button>
+  <span class="command-divider" aria-hidden="true"></span>
+  <button type="button" class="btn" id="refresh">↻ Refresh</button>
+</div>
+
+<div class="rs-pagehead"><h1>Execution timeline</h1><p class="rs-desc">See which rules fire for a table, event and stage, and in what order. Rules run in reading order by ascending priority; drafts are shown in place of their published version.</p></div>
+
+<p class="status-line" id="status" role="status" aria-live="polite">Loading rules…</p>
+
+<div class="card pad">
+  <div class="field-grid g3">
+    <div class="field"><label class="form-label" for="tlTable">Target table</label><select class="select" id="tlTable" data-help="ruleTable"></select></div>
+    <div class="field"><label class="form-label" for="tlEvent">Event</label><select class="select" id="tlEvent" data-help="ruleEvent"></select></div>
+    <div class="field"><label class="form-label" for="tlStage">Stage</label><select class="select" id="tlStage" data-help="ruleStage"></select></div>
+  </div>
+  <div class="divider"></div>
+  <div class="chain-head">
+    <h2 class="h3"><span id="chainTitle">Execution chain</span> <span class="muted t12 chain-count" id="chainCount"></span></h2>
+    <span class="muted t11">Priority number ↑ = executes later · Ties → rule key</span>
+  </div>
+  <div class="chain" id="chain"></div>
+  <p class="empty" id="emptyChain" hidden></p>
+  <div class="other-section" id="otherSection" hidden>
+    <div class="muted t12" id="otherTitle"></div>
+    <div class="chain" id="otherChain"></div>
+  </div>
+</div>
+
+</main>
+<!--SCRIPT-->
+</body>
+</html>

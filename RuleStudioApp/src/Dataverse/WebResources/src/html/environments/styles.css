@@ -1,0 +1,8 @@
+@import "../../shared/rule-studio.css";
+
+.diff-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.diff-grid pre { margin: 0; max-height: 360px; overflow: auto; padding: 10px; background: #f7f8fa; border: 1px solid #e3e8ef; border-radius: 7px; font-size: 11px; white-space: pre-wrap; word-break: break-word; }
+.issue-list { margin: 0 0 12px; padding-left: 18px; font-size: 12px; }
+.issue-list li.error { color: #ad353c; }
+.issue-list li.warning { color: #755418; }
+@media (max-width: 720px) { .diff-grid { grid-template-columns: 1fr; } }

@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "ES6",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "types": [
+      "xrm"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "typings/**/*.ts"
+  ]
+}

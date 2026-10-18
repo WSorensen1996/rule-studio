@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overview · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body>
+<main class="workspace">
+<div class="rs-commandbar" role="toolbar" aria-label="Overview commands">
+  <button type="button" class="btn cmd-back" id="cmdBack" aria-label="Back" title="Back">←</button>
+</div>
+<p class="status-line" id="status" role="status" aria-live="polite">Loading overview…</p>
+
+<div class="grid g4">
+  <div id="metricTotal"></div>
+  <div id="metricLive"></div>
+  <div id="metricDrafts"></div>
+  <div id="metricUnpublished"></div>
+</div>
+
+<div class="card section-gap">
+  <div class="card-head"><h2 class="h3">Continue working</h2><button type="button" class="btn mini ghost" id="allDrafts">All drafts →</button></div>
+  <div class="card-body" id="recentDrafts"></div>
+</div>
+
+<div class="grid g2 section-gap">
+  <div class="card">
+    <div class="card-head"><h2 class="h3">Trigger landscape</h2><span class="muted t11" id="tableCount">—</span></div>
+    <div class="card-body"><div id="triggerBars"></div><p class="muted t11 overview-foot">Each chain runs lowest priority number first; tied priorities use a stable key.</p></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><h2 class="h3">Needs attention</h2><span class="muted t11" id="runCount">—</span></div>
+    <div class="card-body" id="failures"></div>
+  </div>
+</div>
+
+<div class="card section-gap">
+  <div class="card-head"><h2 class="h3">Recent releases</h2></div>
+  <div class="card-body" id="releases"></div>
+</div>
+</main>
+<!--SCRIPT-->
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lookup definition · Rule Studio</title>
+<!--STYLE-->
+</head>
+<body>
+<main class="workspace">
+<div class="rs-commandbar" role="toolbar" aria-label="Lookup definition commands">
+  <button type="button" class="btn cmd-back" id="cmdBack" aria-label="Back" title="Back">←</button>
+  <button type="button" class="btn" id="save" data-author>💾 Save</button>
+  <button type="button" class="btn" id="cmdSaveClose" data-author>Save &amp; close</button>
+  <details class="rs-help"><summary aria-label="About lookups" title="About lookups">?</summary><div class="rs-help-pop"><strong>Values are fetched at execution</strong>The definition is reusable; rows are read from Dataverse when the rule runs, never hardcoded into the rule.</div></details>
+</div>
+
+<div class="rs-summary" aria-label="Lookup summary">
+  <p class="rs-summary-text">Lookup definition</p>
+</div>
+<div class="rs-title">
+  <h1 id="pageTitle">New lookup definition</h1>
+  <p class="rs-desc" id="intro">Define a reusable value source that points to a Dataverse table.</p>
+</div>
+<p class="status-line" id="status" role="status" aria-live="polite">Loading…</p>
+
+<section class="card" aria-label="Lookup definition"><div class="card-body">
+  <div class="field-grid">
+    <div class="field"><label class="form-label" for="lookupName">Lookup name</label><input class="input" id="lookupName" autocomplete="off" data-author></div>
+    <div class="field"><label class="form-label" for="lookupDescription">Description</label><input class="input" id="lookupDescription" autocomplete="off" data-author></div>
+    <div class="field"><label class="form-label" for="recordTable">Evaluated for table</label><select class="select" id="recordTable" data-help="recordTable" data-author><option value="">Loading tables…</option></select></div>
+    <div class="field"><label class="form-label" for="lookupTable">Lookup table (holds the rows)</label><select class="select" id="lookupTable" data-help="lookupTable" data-author><option value="">Loading tables…</option></select></div>
+    <div class="field"><label class="form-label" for="lookupReturn">Return column</label><select class="select" id="lookupReturn" data-help="returnColumn" data-author><option value="">Choose the lookup table first</option></select></div>
+    <div class="field"><label class="form-label" for="lookupSort">Sort column (optional)</label><select class="select" id="lookupSort" data-help="sortColumn" data-author><option value="">Choose the lookup table first</option></select></div>
+    <div class="field"><label class="form-label" for="lookupNoMatch">No match</label><select class="select" id="lookupNoMatch" data-help="noMatch" data-author></select></div>
+    <div class="field"><label class="form-label" for="lookupMulti">Multiple matches</label><select class="select" id="lookupMulti" data-help="multiMatch" data-author></select></div>
+    <div class="field" id="defaultField" hidden><span class="form-label">Default value</span><div id="defaultHolder"></div></div>
+  </div>
+
+  <div class="criteria-head section-gap">
+    <h2 class="h3">Match criteria</h2>
+    <button type="button" class="btn mini" id="addCriterion" data-author>+ Add criterion</button>
+  </div>
+  <p class="muted t11">All criteria must hold. Columns belong to the lookup table; values come from the record the lookup is evaluated for.</p>
+  <div id="criteria" class="criteria-grid"></div>
+</div></section>
+</main>
+<!--SCRIPT-->
+</body>
+</html>
