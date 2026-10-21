@@ -12,6 +12,7 @@
   <button type="button" class="btn cmd-back" id="cmdBack" aria-label="Back" title="Back">←</button>
   <button type="button" class="btn" id="save" data-author>💾 Save</button>
   <button type="button" class="btn" id="cmdSaveClose" data-author>Save &amp; close</button>
+  <button type="button" class="btn" id="cmdDelete" data-author hidden>🗑 Delete</button>
   <details class="rs-help"><summary aria-label="About lookups" title="About lookups">?</summary><div class="rs-help-pop"><strong>Values are fetched at execution</strong>The definition is reusable; rows are read from Dataverse when the rule runs, never hardcoded into the rule.</div></details>
 </div>
 
@@ -28,10 +29,10 @@
   <div class="field-grid">
     <div class="field"><label class="form-label" for="lookupName">Lookup name</label><input class="input" id="lookupName" autocomplete="off" data-author></div>
     <div class="field"><label class="form-label" for="lookupDescription">Description</label><input class="input" id="lookupDescription" autocomplete="off" data-author></div>
-    <div class="field"><label class="form-label" for="recordTable">Evaluated for table</label><select class="select" id="recordTable" data-help="recordTable" data-author><option value="">Loading tables…</option></select></div>
-    <div class="field"><label class="form-label" for="lookupTable">Lookup table (holds the rows)</label><select class="select" id="lookupTable" data-help="lookupTable" data-author><option value="">Loading tables…</option></select></div>
-    <div class="field"><label class="form-label" for="lookupReturn">Return column</label><select class="select" id="lookupReturn" data-help="returnColumn" data-author><option value="">Choose the lookup table first</option></select></div>
-    <div class="field"><label class="form-label" for="lookupSort">Sort column (optional)</label><select class="select" id="lookupSort" data-help="sortColumn" data-author><option value="">Choose the lookup table first</option></select></div>
+    <div class="field"><label class="form-label" for="recordTable">Record being saved</label><select class="select" id="recordTable" data-help="recordTable" data-author><option value="">Loading tables…</option></select></div>
+    <div class="field"><label class="form-label" for="lookupTable">Table with the answers</label><select class="select" id="lookupTable" data-help="lookupTable" data-author><option value="">Loading tables…</option></select></div>
+    <div class="field"><label class="form-label" for="lookupReturn">Return column</label><select class="select" id="lookupReturn" data-help="returnColumn" data-author><option value="">Choose the table with the answers first</option></select></div>
+    <div class="field"><label class="form-label" for="lookupSort">Sort column (optional)</label><select class="select" id="lookupSort" data-help="sortColumn" data-author><option value="">Choose the table with the answers first</option></select></div>
     <div class="field"><label class="form-label" for="lookupNoMatch">No match</label><select class="select" id="lookupNoMatch" data-help="noMatch" data-author></select></div>
     <div class="field"><label class="form-label" for="lookupMulti">Multiple matches</label><select class="select" id="lookupMulti" data-help="multiMatch" data-author></select></div>
     <div class="field" id="defaultField" hidden><span class="form-label">Default value</span><div id="defaultHolder"></div></div>
@@ -41,8 +42,11 @@
     <h2 class="h3">Match criteria</h2>
     <button type="button" class="btn mini" id="addCriterion" data-author>+ Add criterion</button>
   </div>
-  <p class="muted t11">All criteria must hold. Columns belong to the lookup table; values come from the record the lookup is evaluated for.</p>
+  <p class="muted t11">All criteria must hold. Columns belong to the table with the answers; values come from the record being saved.</p>
   <div id="criteria" class="criteria-grid"></div>
+
+  <h2 class="h3 section-gap">How the fields connect</h2>
+  <div id="fieldMap"></div>
 </div></section>
 </main>
 <!--SCRIPT-->

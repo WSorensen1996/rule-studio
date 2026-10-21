@@ -13,6 +13,10 @@
   <button type="button" class="btn primary" id="newLookup" data-author>+ Define lookup</button>
   <span class="command-divider" aria-hidden="true"></span>
   <button type="button" class="btn" id="refresh">↻ Refresh</button>
+  <span class="command-divider" aria-hidden="true"></span>
+  <button type="button" class="btn" id="cmdEdit" disabled>✎ Edit definition</button>
+  <button type="button" class="btn" id="cmdTest" disabled>⚗ Test lookup</button>
+  <button type="button" class="btn" id="cmdDelete" disabled>🗑 Delete</button>
   <details class="rs-help"><summary aria-label="About this page" title="About this page">?</summary><div class="rs-help-pop wide">
     <strong>What is a lookup definition?</strong>A saved "find a value in another table" that rules use while they run, like VLOOKUP in Excel: find the row in table X that matches this record, and return column Y. Business data such as discounts, prices or approval limits stays in a table people can maintain, not inside the rules.
     <p><b>Example.</b> A Discount table has the rows Partner · Nordic · 15, Partner · (empty) · 10 and (empty) · (empty) · 0. The lookup "Discount for quote" matches the quote's customer type and region and returns Discount %. A rule says <i>set field Discount to the lookup "Discount for quote"</i>.</p>
@@ -30,17 +34,14 @@
 
 <p class="status-line" id="status" role="status" aria-live="polite">Loading lookup definitions…</p>
 
-<div class="split">
-  <div class="card pad">
-    <h2 class="h3">Registered lookups</h2>
-    <label class="sr-only" for="lookupSearch">Search lookups</label>
-    <input class="input lookup-search" id="lookupSearch" type="search" placeholder="Search by name or table…" autocomplete="off">
-    <div id="lookupList"></div>
-    <p class="empty" id="emptyState" hidden></p>
+<div class="card pad picker-card">
+  <div class="field-grid g3">
+    <div class="field"><label class="form-label" for="lookupPick">Lookup definition</label><select class="select" id="lookupPick"></select></div>
   </div>
-
-  <div id="detail"></div>
+  <p class="empty" id="emptyState" hidden></p>
 </div>
+
+<div id="detail"></div>
 </main>
 <!--SCRIPT-->
 </body>

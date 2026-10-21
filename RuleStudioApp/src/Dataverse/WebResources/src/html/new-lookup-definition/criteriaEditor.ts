@@ -35,7 +35,7 @@ function select(label: string, options: { value: string; label: string }[], curr
 }
 
 function columnSelect(ctx: CriteriaContext, label: string, current: string, pick: (value: string) => void): HTMLSelectElement {
-  const options = [{ value: "", label: ctx.columns.length ? "— column —" : "Choose the lookup table first" },
+  const options = [{ value: "", label: ctx.columns.length ? "— column —" : "Choose the table with the answers first" },
     ...ctx.columns.map((c) => ({ value: c.logicalName, label: c.label }))];
   if (current && !ctx.columns.some((c) => c.logicalName === current)) options.push({ value: current, label: `⚠ ${current}` });
   return select(label, options, current, (value) => {

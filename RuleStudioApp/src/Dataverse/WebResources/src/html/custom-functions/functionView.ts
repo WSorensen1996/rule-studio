@@ -1,4 +1,4 @@
-// The function list cards and the detail panel of the selected function.
+// The detail panel of the selected function.
 import { outputLabel } from "./functionData";
 import { h, pill } from "../../shared/dom";
 
@@ -10,19 +10,10 @@ const TYPE_LABELS: Record<ParameterType, string> = {
 };
 
 function behaviourPills(fn: FunctionRecord): HTMLElement {
-  return h("div", { className: "card-pills" },
+  return h("div", { className: "rs-summary-pills" },
+    fn.enabled ? pill("Active", "live") : pill("Inactive", "muted"), " ",
     fn.hasSideEffects ? pill("Side effects", "warning") : pill("Pure", "live"), " ",
-    fn.safeToRetry ? pill("Retry-safe", "info") : pill("One attempt", "warning"),
-    fn.enabled ? null : h("span", {}, " ", pill("Inactive", "muted")));
-}
-
-export function functionCard(fn: FunctionRecord, selected: boolean, onSelect: () => void): HTMLButtonElement {
-  const card = h("button", { className: "select-card", attrs: { type: "button", "aria-pressed": String(selected) } },
-    h("b", { className: "t12" }, fn.name),
-    h("div", { className: "muted t11 mono" }, fn.apiName || "No Custom API name"),
-    behaviourPills(fn));
-  card.addEventListener("click", onSelect);
-  return card;
+    fn.safeToRetry ? pill("Retry-safe", "info") : pill("One attempt", "warning"));
 }
 
 function plural(count: number, word: string): string {
@@ -84,7 +75,7 @@ function fieldGrid(fn: FunctionRecord): HTMLElement {
 function heading(fn: FunctionRecord): HTMLElement {
   return h("div", { className: "detail-heading" },
     h("div", { className: "rs-summary" },
-      h("div", { className: "rs-summary-pills" }, fn.enabled ? pill("Active", "live") : pill("Inactive", "muted")),
+      behaviourPills(fn),
       h("p", { className: "rs-summary-text" }, "Custom function")),
     h("div", { className: "rs-title" }, h("h2", {}, fn.name), h("p", { className: "rs-desc" }, fn.description || "No description.")));
 }

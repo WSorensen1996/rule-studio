@@ -1,63 +1,64 @@
 # Rule Studio — User Guide
 
-This document describes the Rule Studio solution: a no-code rule engine for Dataverse / Power Apps. Each section covers one part of the app — what it shows and where its data comes from.
+Rule Studio lets you build business rules for Dataverse without code. This guide follows the app from top to bottom, in the same order as the menu on the left: **Workspace**, **Building blocks**, **Operations** and **Reference**.
 
-## 1. Overview
+## 1. Start here
 
-The Overview is the home page of Rule Studio: a quick summary of your rules and what needs attention.
+**TLDR:** A rule says "when this record is saved, check this, then do that". You build it as a draft, test it, publish it, and watch it run.
 
-**What it shows**
+### Five words to know
+
+- **Rule:** when a record is saved (the trigger), check something (IF), then do something (THEN / ELSE). Example: when a quote is saved and the total is over 10,000, block the save.
+- **Draft:** a version you are still working on. Drafts never run in production.
+- **Live:** the published version. This is the one that runs.
+- **Chain:** all rules that start on the same table, event and stage. They run one after the other.
+- **Release:** one publish. It can be rolled back as a whole.
+
+### The journey of a rule
+
+Every rule takes the same path, and this guide follows it:
+
+1. **Create** the rule in the **Rule library**.
+2. **Build** it in the **Rule editor**: trigger, IF, THEN / ELSE.
+3. **Check the order** of rules in the **Execution timeline**.
+4. **Test** it in **Test & trace**. Nothing is saved.
+5. **Publish** it in **Releases & versions**.
+6. **Watch** it run in **Execution logs**, and roll back if needed.
+7. **Move** it to Test and Prod with **Environments**.
+
+Rules can use **building blocks**: custom functions, lookups and expressions. Want to know what happens under the hood? See **How Rule Studio works**.
+
+### Who can do what
+
+- **Rule Studio Author:** can create, edit, test, publish, roll back and import.
+- **Rule Studio Viewer:** read only. Buttons that change things are greyed out.
+- Give either role together with Basic User.
+
+### Every page works the same way
+
+- **← Back** is the first button on every page. It returns to where you came from.
+- **Records open full-page**, like any Power Apps form. Only short confirm steps (publish, rollback, restore) are pop-ups.
+- **Unsaved changes:** leaving a form with unsaved changes asks first: Save and leave, Leave without saving, or Stay.
+- **Field help:** hover over a field (or tab into it) for 2 seconds. A short tooltip explains it. Press Esc, click or scroll to hide it.
+- **Status chips** (Live, Draft, Inactive …) sit in the bar above a record's title.
+
+## 2. Overview
+
+*Workspace › Overview*
+
+**TLDR:** The home page. A quick summary of your rules and what needs attention. It only reads data.
 
 - **Four counts:** total rules, live rules, drafts in progress, and rules not published (with how many are inactive).
-- **Continue working:** your most recently edited drafts. Click one to open it in the editor, or use "All drafts" to see them all.
+- **Continue working:** your most recently edited drafts. Click one to open it, or use "All drafts".
 - **Trigger landscape:** a bar chart of how many rules run on each table, event and stage.
-- **Needs attention:** runs and failures in the last 7 days, plus the latest failures with their error message.
+- **Needs attention:** runs and failures in the last 7 days, and the latest failures with their error.
 - **Recent releases:** the latest releases and their status.
 
-**Where the data comes from**
+**Next:** open the Rule library to find or create a rule.
 
-| Dataverse table | Used for |
-| --- | --- |
-| `rs_rule`, `rs_ruleversion` | Rules, live versions and drafts |
-| `rs_executionlog` | Run and failure history (test runs excluded) |
-| `rs_release` | Release history |
+## 3. Rule library
 
-Table display names come from Dataverse metadata. The page only reads data; it changes nothing.
-
-## 2. UI page standard
-
-Every Rule Studio page follows one layout standard, so the app looks like one product. The developer reference is `RuleStudioApp/docs/ui-standard.md`.
-
-| Page type | Pages | Top of page |
-| --- | --- | --- |
-| Record form | Rule editor, Custom function, Lookup definition, Release details, Execution detail | Opens full-page in place of the list. Toolbar (← Back first), summary bar (status chips, key facts), full-width title, sections |
-| List page | Rule library, Releases, Execution logs, Execution timeline, Test & trace, Custom functions, Lookup definitions, Environments, Guide | Toolbar, then title and description on one line |
-| Dialog | Publish, Rollback, Restore | Dataverse title, then a one-line intro |
-| Dashboard | Overview | Counts, then cards |
-
-**Rules for all pages**
-
-- No breadcrumb labels: the sitemap already shows where you are.
-- Records open full-page, like a form in any model-driven app: the record takes the place of the list. Only short confirm-and-act steps (publish, rollback, restore) are pop-ups.
-- **← Back** is the first button in the toolbar on every page. It returns to the page you came from; a record opened from a link goes to its list. A page you reached from the sitemap has no Back button.
-- **Unsaved changes:** leaving a form with changes that are not saved asks first: Save and leave, Leave without saving, or Stay.
-- Status chips sit in the summary bar above a record's title, so the title uses the full width.
-- Section and card headers are one line: number, title, description, chips on the right.
-- Long descriptions end with "…"; hovering shows the full text.
-- A test (`ui-standard.test.mjs`) fails the build if a page uses the old patterns.
-
-## 3. Field help tooltips
-
-**TLDR:** Hover over a field (or tab into it) for 2 seconds and a short tooltip explains what it is and what goes in it. Example: Priority → "Lower numbers run first, so 10 runs before 100."
-
-- **Where:** about 45 non-trivial fields on 8 pages: rule editor, conditions and actions, the custom function and lookup definition forms, the publish dialog, execution logs, test & trace and timeline.
-- **Not on:** self-explanatory fields such as names, descriptions and search boxes.
-- **One list of texts:** every explanation lives in one shared file, so the same field shows the same text on every page.
-- **Hide it:** Esc, a click or scrolling.
-- **Guarded:** a test fails the build if a new field has no help text.
-- Developer details: `docs/ui-standard.md`, section "Field help".
-
-## 4. Rule library
+*Workspace › Rule library*
 
 **TLDR:** A list of every rule. Find a rule, see its status, and open it.
 
@@ -80,7 +81,7 @@ Every Rule Studio page follows one layout standard, so the app looks like one pr
 - **Rule:** the name, with the unique key below it.
 - **Trigger:** the table, then the event and stage (for example Update · Before save). If the draft uses a different trigger than the live version, a "Draft:" line shows the new one.
 - **Priority:** the run order. Lower numbers run first.
-- **Version / status:** chips that show the state:
+- **Version / status:**
   - **Live vN:** this version runs in production.
   - **Draft vN:** unpublished changes are waiting.
   - **Live + Draft:** both chips show. Live runs; the draft is the next version.
@@ -88,25 +89,25 @@ Every Rule Studio page follows one layout standard, so the app looks like one pr
   - **Inactive:** the rule is deactivated, so it never runs.
 - **Open →:** opens the rule in the rule editor.
 
-**Good to know:** only published versions run. Drafts never affect production.
+**Next:** click **+ New rule** or **Open →** to build the rule.
 
-## 5. Rule editor
+## 4. Rule editor
 
-**TLDR:** The form where you build one rule: when it runs, what it checks, and what it does.
+*Opens from the Rule library*
+
+**TLDR:** The form where you build one rule. It reads top to bottom like a sentence: **when** this happens (trigger), **if** this is true (conditions), **then** do this (actions).
 
 ### Top of the form
 
 - **Summary bar:** status chips (for example Draft v6 · Live v5), then key · trigger.
 - **Title:** the rule name. Click it to edit.
 - **Tabs:** Rule builder (the form) and Version history & rollback.
-- **Field help:** hover over a field for 2 seconds to see what it means.
 
 ### Buttons
 
-- **← Back:** returns to the page you came from. Asks first if you have unsaved changes.
 - **Save draft:** saves your changes as a draft. Nothing runs yet.
 - **Save & close:** saves the draft and goes back.
-- **Test rule:** opens Test & trace to try the rule on a record.
+- **Test rule:** opens Test & trace with this rule picked.
 - **Publish:** makes the draft the live version. From then on it runs in production.
 - **Discard draft:** throws the draft away. The live version stays.
 - **Delete rule:** removes the whole rule. Only allowed when the rule is not live. If the rule only has a draft, Discard draft becomes Delete rule.
@@ -115,30 +116,35 @@ Every Rule Studio page follows one layout standard, so the app looks like one pr
 - **Timeline:** shows all rules that run on the same table, in order.
 - **Version history:** jumps to the Version history tab.
 
-### 1. Rule identity & trigger
+### Step 1 · When: identity & trigger
 
-What the rule is, and which record event starts it.
+What the rule is, and which save starts it.
 
 - **Unique rule key:** a short ID, like PRICING.DISCOUNT. It stays the same in every environment.
 - **Description:** a short note on what the rule does.
 - **Target table:** the table whose records start the rule, for example quote.
 - **Event:** Create, Update or Delete.
-- **Execution stage:** Before save can change or block the save. After save runs once the record is saved and cannot block it.
+- **Execution stage:** **Before save** can change or block the save. **After save** runs once the record is saved and cannot block it.
 - **Triggering columns:** Update only. The rule runs only when one of these columns changes. Empty means any change.
-- **Activate / Deactivate** (in the header): an inactive rule never runs, even when it is published. Applies as soon as you save.
+- **Activate / Deactivate** (in the header): an inactive rule never runs, even when published. Applies as soon as you save.
 
-### 2. Conditions (IF)
+### Step 2 · If: conditions
 
 What must be true for the actions to run. No conditions means the rule always runs.
 
-- Each row is: **field → operator → value**. For example: Total amount → Greater than → 10000.
-- **Field:** pick a field on the record, or follow a relation to a parent record (for example the quote's account).
-- **Child records:** for related lists (for example quote lines) pick how to check them: Any, All, None-of, or a number from Count, Sum, Min, Max or Average.
-- **Operator:** Equals, Not equals, Greater/Less than, Contains, Starts with, Is empty, In list, Between, or Changed (the save changes this field).
-- **Value source:** Fixed (you type it), Field path (another field), Lookup (a row from a table), Function (a custom function), or Expression (a small formula).
+- Each row reads: **field → operator → value**. Example: Total amount → Greater than → 10000.
+- **Field:** a field on the record, or a field on a parent record (for example the quote's account).
+- **Child records:** for related lists (for example quote lines) pick Any, All, None-of, or a number from Count, Sum, Min, Max or Average.
+- **Operator:** Equals, Not equals, Greater/Less than, Contains, Starts with, Is empty, In list, Between, or Changed (this save changes the field).
+- **Value source:** where the value comes from:
+  - **Fixed:** you type it.
+  - **Field path:** another field.
+  - **Lookup:** a value from another table. See **Lookup definitions**.
+  - **Function:** the result of a custom function. See **Custom functions**.
+  - **Expression:** a small formula. See **Expressions**.
 - **Groups:** combine rows with AND (all must be true) or OR (one is enough). Groups can be nested.
 
-### 3. Actions (THEN / ELSE)
+### Step 3 · Then / else: actions
 
 What the rule does. Actions run top to bottom.
 
@@ -147,30 +153,30 @@ What the rule does. Actions run top to bottom.
 - **Action types:**
   - **Set field:** gives a field a new value.
   - **Block save:** stops the save and shows your error message. Before save only.
-  - **Call function:** runs a registered custom function and maps its inputs.
+  - **Call function:** runs a custom function and maps its inputs.
   - **Log message:** writes a message to the execution log.
 - After save cannot change the saved record directly. A Set field there makes a follow-up update.
 
-### 4. Order, safety & runtime
+### Step 4 · Order, safety & runtime
 
 How the rule behaves when it runs.
 
-- **Priority:** run order. Lower numbers run first.
+- **Priority:** run order in the chain. Lower numbers run first.
 - **On failure:** Block stops the save with an error. Log and continue logs the error and lets the save go on.
 - **Run as:** Calling user uses the user's permissions. System uses full permissions.
 - **Retry count / Retry delay:** how often to try again after a failure, and how long to wait between tries (ms).
 - **Execution log level:** Off, Errors only, Summary, or Full trace. Default means Errors only.
-- **Stop processing after match:** when this rule matches, later rules on the same trigger are skipped.
+- **Stop processing after match:** when this rule matches, later rules in the chain are skipped.
 - **Version change note:** what changed in this version. Shows in the history.
 
-### 5. Rule latency & frequency
+### Step 5 · Latency & frequency
 
 How the live rule performs, based on recent production logs.
 
 - **Average logged latency:** average run time in ms.
 - **Observed executions:** how many recent runs were logged.
-- **Recent durations:** a bar per run. Hover a bar for outcome, time and date.
-- Counts only logged runs. With Errors only, successful runs are not counted.
+- **Recent durations:** one bar per run. Hover a bar for outcome, time and date.
+- Only logged runs count. With Errors only, successful runs are not counted.
 
 ### Version history & rollback tab
 
@@ -178,7 +184,11 @@ How the live rule performs, based on recent production logs.
 - **Restore as draft:** copies an older version into a new draft.
 - **Create draft from live:** starts a new draft from the live version.
 
-## 6. Execution timeline
+**Next:** check where the rule sits among the other rules in the Execution timeline.
+
+## 5. Execution timeline
+
+*Workspace › Execution timeline*
 
 **TLDR:** Shows which rules run when a record is saved, and in what order.
 
@@ -190,7 +200,7 @@ How the live rule performs, based on recent production logs.
 
 ### Buttons
 
-- **Test this chain:** opens Test & trace with this table, event and stage already picked.
+- **Test this chain:** opens Test & trace with this table, event and stage picked.
 - **Refresh:** reloads the rules.
 
 ### Filters
@@ -204,7 +214,7 @@ Cards run in reading order (left to right, then the next row), joined by arrows.
 - **#Priority:** the run order number.
 - **State chip:**
   - **Enabled:** the published rule runs.
-  - **Draft:** the card shows an unpublished draft; it runs once published. **Draft · new here** or **Draft · changed** when the draft of a published rule adds it to this chain or changes its priority, stop flag or filtered columns.
+  - **Draft:** an unpublished draft; it runs once published. **Draft · new here** or **Draft · changed** when the draft adds the rule to this chain or changes its priority, stop flag or filtered columns.
   - **Inactive:** the rule is deactivated. It is skipped.
   - **Not reached:** an earlier rule stops processing, so this one never runs.
 - **Rule name**, then the version ("(draft)" when it is the draft).
@@ -215,48 +225,52 @@ Cards run in reading order (left to right, then the next row), joined by arrows.
 
 ### Rules below the chain
 
-Dashed cards below the chain, marked **Draft removes**, are published rules whose draft moves them off this trigger.
+Dashed cards marked **Draft removes** are published rules whose draft moves them off this trigger.
 
-## 7. Test & trace
+**Next:** test the chain before you publish.
+
+## 6. Test & trace
+
+*Workspace › Test & trace*
 
 **TLDR:** Try rules on a record before they go live, and see step by step what they would do. **It never changes anything in your environment.**
 
 ### Is it safe? Yes.
 
 - **Nothing is saved.** No records are created, changed or deleted.
-- Actions like Set field only change a copy in memory. You see the result, Dataverse does not.
+- Set field only changes a copy in memory. You see the result; Dataverse does not.
 - **No execution log rows** are written for tests.
 - **Functions with side effects are never called.** They always get a fake (mocked) result.
-- By default **all** functions are mocked. Turn off "Mock all functions" to really call functions that are side-effect free (they only read, never write).
-- The test runs with **your permissions**. You only see rules and records you are allowed to read.
+- By default **all** functions are mocked. Turn off "Mock all functions" to really call functions that only read.
+- The test runs with **your permissions**. You only see rules and records you may read.
 - Drafts are tested without publishing them.
 
 ### How to open it
 
-- From the sitemap: **Test & trace**.
-- From the rule editor: **Test rule** (that rule is pre-selected).
-- From the execution timeline: **Test this chain** (that chain is pre-selected).
+- From the menu: **Test & trace**.
+- From the rule editor: **Test rule** (that rule is picked).
+- From the execution timeline: **Test this chain** (that chain is picked).
 
 ### Step 1 · What to test
 
 Pick one of two modes:
 
-- **Table / event / stage chain:** test the whole chain, exactly as a real save would run it. Inactive rules show as skipped.
-- **Selected rules:** tick one or more rules to test only those. They must share the same table, event and stage. Inactive rules still run here, because you picked them on purpose.
+- **Table / event / stage chain:** the whole chain, exactly as a real save runs it. Inactive rules show as skipped.
+- **Selected rules:** tick the rules to test. They must share the same table, event and stage. Inactive rules still run here, because you picked them on purpose.
 
 Then choose:
 
 - **Rule version to evaluate:**
   - **Draft where available:** uses your unpublished changes. Rules without a draft use their live version.
-  - **Published only:** tests exactly what runs in production today.
-- **Mock all functions:** on = no function is really called. Off = side-effect free functions are called for real. Side-effect functions are always mocked.
+  - **Published only:** exactly what runs in production today.
+- **Mock all functions:** on = no function is really called. Off = read-only functions are called for real. Side-effect functions are always mocked.
 
 ### Step 2 · Record
 
 Give the rules data to work with.
 
-- **Real record (optional):** search by name and pick a record. Its current values are loaded. It is only read, never changed.
-- **Sample values:** add column + value pairs. They are laid over the record. Use them to try "what if" values.
+- **Real record (optional):** search by name and pick a record. Its values are loaded. It is only read, never changed.
+- **Sample values:** add column + value pairs on top of the record. Use them to try "what if" values.
   - Values are JSON: `20`, `true`, `"text"`, or a lookup like `{"table":"account","id":"…"}`. Plain text also works.
 - **No record picked?** The test starts from an empty record plus your sample values.
 - **On Update:** the sample values count as the **changed columns**. The real record is the "before" state. Rules with triggering columns are skipped if none of their columns changed.
@@ -279,123 +293,152 @@ One line per rule, in run order:
 - **Matched:** the conditions were true. The THEN actions ran.
 - **Not matched:** the conditions were false. The ELSE actions ran, if any.
 - **Blocked:** the rule stopped the save.
-- **Skipped:** the rule did not run. The reason is shown: rule inactive or none of its triggering columns changed.
+- **Skipped:** the rule did not run, with the reason: inactive, or none of its triggering columns changed.
 - **Stopped:** an earlier rule stopped processing or blocked the save.
 
-Open a line to see:
-
-- **Condition evaluation:** each condition with the actual value and whether it was true.
-- **Action results:** what each action did (field set, function called, message logged).
+Open a line to see each condition with its actual value, and what each action did.
 
 **3. Before / after field values**
 
-A table of every field the rules changed: the value before, the value after, and which rule wrote it. "No fields changed" means no rule set a field.
+Every field the rules changed: the value before, the value after, and which rule wrote it.
 
 ### Chain preview (right side)
 
-Shows the rules that will be tested, in order. In Draft mode your draft replaces the live version of that rule.
+The rules that will be tested, in order. In Draft mode your draft replaces the live version.
 
 ### Tips
 
 - Test a draft before you publish it. It is free and safe.
 - To check a filtered rule on Update, add a sample value for one of its triggering columns.
-- Same evaluator as production: if the test passes, the live rule behaves the same on the same data.
+- The test uses the same engine as production: same data, same result.
 
-## 8. Custom functions
+**Next:** when the test looks right, publish it in **Releases & versions**. If the rule needs a function or a lookup, set those up first in Building blocks.
 
-**TLDR:** Custom functions are pieces of code made by developers (Dataverse Custom APIs). Register one here once, and rule authors can pick it from a dropdown.
+## 7. Custom functions
+
+*Building blocks › Custom functions*
+
+**TLDR:** A custom function is code a developer has written (a Dataverse Custom API). Register it here once, and rule authors can pick it from a dropdown. Registering does not create code: the Custom API must already exist.
 
 ### Buttons
 
 - **+ Register function:** opens a new custom function form.
 - **Refresh:** reloads the list.
 
-### Left: available functions
+### Pick a function
 
-One card per function with its name, Custom API name, and chips:
+Choose a function from the **Custom function** dropdown (inactive ones say so). Its details fill the page, with these chips in the summary bar:
 
 - **Pure / Side effects:** Pure only reads. Side effects changes data or calls other systems.
 - **Retry-safe / One attempt:** whether a failed rule may run it again.
-- **Inactive:** cannot be picked in new rules, and rules that call it fail when they run. Use Activate / Deactivate in the header.
+- **Inactive:** cannot be picked in new rules, and rules that call it fail. Use Activate / Deactivate in the header.
 
-### Right: the selected function
+### The selected function
 
 - **Custom API logical name, Output type, Timeout.**
 - **Typed inputs:** each parameter with its type, whether it is required, and its table (for lookups).
 - **Uniform result contract:** every function returns success, value and message.
 - **Behaviour notes:** how tests and retries treat it.
 - **Usage:** which rules use it. A function in use cannot be deleted.
-- **Edit registration:** opens the function's form to change it.
+- **Edit registration:** opens the function's form.
 
 ### Custom function form
 
-Opens full-page. Commands: **← Back**, **Save**, **Save & close**.
+Commands: **← Back**, **Save**, **Save & close**.
 
 - **Display name:** the name authors see.
-- **Custom API logical name:** the real Custom API. Use the search button to pick one from this environment.
+- **Custom API logical name:** the real Custom API. Use the search button to pick one.
 - **Output type:** what the function returns (text, number, yes/no and so on).
 - **Timeout (ms):** how long it may run. Empty = default.
 - **Description:** what it does.
-- **Input parameters:** add each input with name, type, required, and table for lookups.
-- **Has side effects / Safe to retry:** the switches described above. Activate or deactivate a function from the Custom functions header.
-
-**Good to know:** registering does not create code. The Custom API must already exist.
+- **Input parameters:** name, type, required, and table for lookups.
+- **Has side effects / Safe to retry:** the switches described above.
 
 ### Standard functions
 
-Rule Studio ships six ready-made functions. Register the ones you want: **+ Register function**, search for the Custom API, and set the switches as listed.
+Rule Studio ships six ready-made functions. To use one: **+ Register function**, search for the Custom API, and set the switches as listed.
 
 - **rs\_ValidateEmail:** is this a valid e-mail address? Yes/no. Pure, safe to retry.
 - **rs\_ValidatePhone:** is this a valid phone number? Give CountryCode (e.g. DK) for numbers without +. Yes/no. Pure, safe to retry.
 - **rs\_ValidateVatNumber:** is this a valid VAT number? Checks format and check digits offline; it does not ask VIES. Yes/no. Pure, safe to retry.
 - **rs\_CreateTask:** creates a task, optionally regarding a record, with a due date and owner. Side effects, not safe to retry.
 - **rs\_AssignTo:** makes a user or team the owner of a record. Side effects, safe to retry.
-- **rs\_CallWebhook:** posts a payload to an https URL (or to the URL in an environment variable) and returns the HTTP status. Side effects, not safe to retry.
+- **rs\_CallWebhook:** posts a payload to an https URL (or the URL in an environment variable) and returns the HTTP status. Side effects, not safe to retry.
 
-Example: keep a Yes/No column "VAT number valid" up to date. Trigger: account, Update, Before save, triggering column = the VAT field. Action: **Set field** "VAT number valid" to function **rs\_ValidateVatNumber** with VatNumber from the VAT field. Views and other rules can then use that column.
+**Example:** keep a Yes/No column "VAT number valid" up to date. Trigger: account, Update, Before save, triggering column = the VAT field. Action: **Set field** "VAT number valid" to function **rs\_ValidateVatNumber** with VatNumber from the VAT field.
 
 Empty values count as valid, so pair a validation with "is filled in" when the field is required. Details: [Custom APIs](custom-apis.md#standard-custom-functions).
 
-## 9. Lookup definitions
+### Sample functions
 
-**TLDR:** A lookup finds a value in another table while a rule runs. Example: find the discount % in a discount table for the quote's customer type. Define it once, reuse it in any rule.
+- **rs\_SampleCalculateDiscount:** revenue + employees → discount. Pure and safe to retry.
+- **rs\_SampleStampContacts:** writes text on an account's contacts. Has side effects, so it is mocked in tests and tried only once.
+- Register both again after a data reset.
+
+## 8. Lookup definitions
+
+*Building blocks › Lookup definitions*
+
+**TLDR:** A lookup finds a value in another table while a rule runs. Define it once, use it in any rule.
+
+**Example:** a Discount table has one row per customer type and country, with a discount %. The lookup "Discount for quote" says: find the row where Customer type = the quote's customer type and Country = the quote's country, and give back Discount %. A rule can then set the quote's discount to that value.
+
+The values are read from Dataverse every time the rule runs. Change a row in the Discount table, and the rule uses the new value straight away.
 
 ### Buttons
 
 - **+ Define lookup:** opens a new lookup definition form.
 - **Refresh:** reloads the list.
+- **Edit definition / Test lookup / Delete:** act on the selected lookup. Delete is off while the lookup is in use.
 
-### Left: registered lookups
+### Pick a lookup
 
-- **Search** by name or table.
-- Click a lookup to see its details.
-- Values are read from Dataverse each time the rule runs. They are never copied into the rule.
+- Choose a lookup from the **Lookup definition** dropdown (name · table).
+- Its details fill the page below.
 
-### Right: the selected lookup
+### The selected lookup
 
-- **Target table:** the table that holds the rows.
-- **Return column:** the value the lookup gives back.
-- **Match criteria:** the rules a row must meet. All must be true. No criteria = every row matches.
+- **Table with the answers:** the table that holds the rows (the Discount table).
+- **Return column:** the value the lookup gives back (Discount %).
+- **Match criteria:** what a row must meet. All must be true. No criteria = every row matches.
+- **How the fields connect:** a picture of the record being saved on the left and the table with the answers on the right. Blue lines must match; the green line is the answer that comes back.
 - **If no rows match:** Block, Use default (shows the default value), or Skip.
 - **If multiple rows match:** Most specific, First by sort (shows the sort column), or Error.
 - **Usage:** where it is used. A lookup in use cannot be deleted.
-- **Edit definition / Test lookup / Delete.**
 
 ### Lookup definition form
 
-Opens full-page. Commands: **← Back**, **Save**, **Save & close**.
+Commands: **← Back**, **Save**, **Save & close**, and **Delete** for a saved lookup (not when it is in use).
 
 - **Lookup name** and **Description.**
-- **Evaluated for table:** the table of the record the rule runs on.
-- **Lookup table:** the table with the rows to search.
+- **Record being saved:** the table of the record the rule runs on (quote).
+- **Table with the answers:** the table with the rows to search (Discount).
 - **Return column:** what to give back.
 - **Sort column:** optional. Used with First by sort.
 - **No match / Multiple matches:** the policies above. Use default shows a Default value field.
-- **Match criteria:** add rows like "lookup column equals record field". All must hold.
+- **Match criteria:** one row is added for you. Each row reads "column in the table with the answers – equals – field on the record being saved". Remove it to match every row.
+- **How the fields connect:** the same picture as on the list. It updates while you build.
+
+## 9. Expressions
+
+*Used in the Rule editor*
+
+**TLDR:** An expression is a small formula, like in Excel. Use it as a value source in conditions and actions.
+
+- Fields go in brackets: `[creditlimit] * 0.1`.
+- Parent fields: `[parentcustomerid:account.creditlimit]`.
+- Built-in math: if, in, round, min, max, abs, pow. Names ignore case. round rounds half away from zero (2.5 → 3).
+- Custom functions can be called by name.
+- **Empty fields:** an empty field makes the whole result empty, and Set field then clears the column. `[quantity] * [unitprice]` with no quantity gives empty, not 0. To use 0, write `if([quantity] = null, 0, [quantity]) * [unitprice]`, or add the condition "Quantity is filled in".
+- Publishing checks every expression. Errors block the release.
+
+**Next:** with the building blocks in place, publish the rule.
 
 ## 10. Releases & versions
 
-**TLDR:** Every publish creates a release. A release is a bundle of rule versions that went live together, and can be undone together.
+*Operations › Releases & versions*
+
+**TLDR:** Every publish creates a release: a bundle of rule versions that went live together, and can be undone together.
 
 ### Buttons
 
@@ -416,15 +459,15 @@ Opens full-page. Commands: **← Back**, **Save**, **Save & close**.
 - **Scope:** how many rules.
 - **Validation:** the result of the publish checks.
 - **State:** Live, Rolled back or Failed.
-- **Inspect:** opens the release details page (rules, versions, validation result).
+- **Inspect:** opens the release details (rules, versions, validation result).
 - **Rollback:** opens the rollback dialog.
 
 ### Publish dialog
 
-- Give the release a **name** and optional **description**.
-- Check the **versions included**.
-- Click **Validate.** It checks fields, types, paths, expressions, functions and conflicts.
-- **Publish release** is enabled only when validation passes. All drafts go live together, or none do.
+1. Give the release a **name** and optional **description**.
+2. Check the **versions included**.
+3. Click **Validate.** It checks fields, types, paths, expressions, functions and conflicts.
+4. **Publish release** turns on only when validation passes. All drafts go live together, or none do.
 
 ### Rollback dialog
 
@@ -440,7 +483,11 @@ Opens full-page. Commands: **← Back**, **Save**, **Save & close**.
 
 **Good to know:** there is no approval step inside one environment. Approvals happen in the Dev → Test → Prod pipeline.
 
+**Next:** watch the rule run in the Execution logs.
+
 ## 11. Execution logs
+
+*Operations › Execution logs*
 
 **TLDR:** A record of rules that ran: when, the result, and how long it took. Use it to find problems.
 
@@ -454,28 +501,29 @@ Opens full-page. Commands: **← Back**, **Save**, **Save & close**.
 - **Rule, Table, From, To.**
 - **Outcome:** any, or only failures and blocks.
 - **Runs:** production, test runs, or both.
-- **Correlation ID:** shows everything from one save.
+- **Correlation ID:** everything from one save.
 - **Admin flag only:** runs marked for follow-up.
 - **Apply / Clear.**
 
 ### Each row shows
 
-Time, rule, outcome, trigger, duration, attempts, mode (production or test) and correlation ID. Click **Inspect** to open the log detail page.
+Time, rule, outcome, trigger, duration, attempts, mode (production or test) and correlation ID. Click **Inspect** to open the log detail.
 
 ### Log detail
 
 - Rule and version, outcome, record, duration, time and trigger.
-- Run metadata: correlation ID, attempts, admin flag, log level, mode.
+- Run details: correlation ID, attempts, admin flag, log level, mode.
 - The error, if any.
 - The full trace: conditions, actions and field changes (depends on log level).
 
-### Logging policy
+### What gets logged
 
-- **Off:** nothing is logged.
+Each rule sets its own log level in the rule editor (Step 4).
+
+- **Off:** nothing.
 - **Errors only:** failures and blocked saves. The default.
 - **Summary:** outcome and duration.
 - **Full trace:** every detail.
-- A rule without its own level uses Errors only.
 - After-save failures are always logged and flagged for an admin.
 - Blocked saves are not stored as log rows (the save is undone). They go to the plug-in trace log.
 
@@ -485,14 +533,18 @@ Time, rule, outcome, trigger, duration, attempts, mode (production or test) and 
 - **Keep failed and blocked runs (days):** default 90.
 - **Schedule retention jobs:** creates two daily cleanup jobs. Needs System Administrator.
 
+**Next:** when the rules work, move them on to the next environment.
+
 ## 12. Environments
 
-**TLDR:** Move published rules from one environment to another (for example Dev to Test) as one JSON file.
+*Operations › Environments*
+
+**TLDR:** Move published rules from one environment to another (for example Dev to Test) as one file.
 
 ### Step 1 · Export
 
 - **↓ Export published rules:** downloads every published rule, plus the lookups it uses, as one file.
-- Functions and lookups are referenced by name, so the file works in any environment.
+- Functions and lookups are referred to by name, so the file works in any environment.
 
 ### Step 2 · Import
 
@@ -505,7 +557,7 @@ Custom functions must already be registered in the target environment.
 ### Check result
 
 - One row per rule key: the result and what will happen.
-- Lookup changes and a side-by-side diff (incoming vs current).
+- Lookup changes, and a side-by-side diff (incoming vs current).
 
 ### How conflicts work
 
@@ -514,54 +566,222 @@ Custom functions must already be registered in the target environment.
 - **Changed in both places:** conflict. The whole import stops. Fix it in Git and check again.
 - Rules that only exist here are kept.
 
-## 13. Documentation (Reference)
+## 13. How Rule Studio works
 
-**TLDR:** This document, inside Rule Studio. Open it from the sitemap under Reference › Documentation.
+*Behind the scenes*
 
-### What it shows
+**TLDR:** One plug-in, the engine, runs every published rule. On a save it loads the chain for that table, event and stage, and builds the full record from the pre-image plus the changes. It then runs the rules in order, and either writes the result into the save or blocks it.
 
-- **Contents (left):** every section of this document. Click one to jump to it.
-- **Sections (right):** one white card per section, the same text as this document.
-- The page only reads; it changes nothing.
+### From rule to engine: what publishing does
 
-### How it is kept up to date
+What you build in the editor is stored as rows: rule version, conditions, actions. The engine never reads those rows.
 
-- The page is generated from `RuleStudioApp/docs/user-guide.md` by `guide.build.mjs` in the WebResources project.
-- After editing the document: run `node guide.build.mjs`, then build and deploy as usual.
+- **Compile:** on publish, each version is compiled into one JSON **snapshot** on the rule version. This is what the engine runs. The live version is therefore fixed: editing the draft can't change what runs.
+- **Validate:** before anything goes live, the publish checks fields, types, paths, hop limits, expressions, functions and fixed values. If one rule fails, the whole release is stopped.
+- **Register steps:** Rule Studio then makes the plug-in steps in Dataverse match the published rules exactly.
+  - It registers **one step per table + event + stage**, not one per rule.
+  - **Before save** registers as PreOperation (20) and runs synchronously.
+  - **After save** registers as PostOperation (40) and runs asynchronously, with its system jobs auto-deleted.
+  - **Update steps filter** on the union of the chain's triggering columns. If any rule in the chain has none, the step fires on every change.
+  - **Update and Delete steps** get a pre-image.
+  - Steps no published rule needs are removed. This happens again on rollback and on activate/deactivate. Steps edited by hand are put back on the next publish.
+- **Cache:** the engine keeps a loaded chain in memory for **30 seconds**. After that it only checks the version ids and snapshot hashes, and re-reads a snapshot only if it changed. A publish or rollback is live within about 30 seconds.
 
-### From idea to safe rollout
+### What happens on one save
 
-1. **Find or create** the rule in the Rule library.
-2. **Set the trigger:** table, event, stage, and optional triggering columns.
-3. **Write the IF:** conditions, grouped with AND/OR.
-4. **Write THEN and ELSE:** the actions.
-5. **Test it** in Test & trace. Nothing is saved.
-6. **Publish** with Validate & publish.
-7. **Observe and roll back** with Execution logs and Releases.
-8. **Promote** to other environments with Environments.
+1. **Map the trigger:** message + stage become, for example, quote · Update · Before save. Other messages do nothing.
+2. **Recursion guard:** above execution depth **6** (Dataverse's own limit is 8) the engine stops with a readable error.
+3. **Load the chain:** the live, active rules for this trigger. They are read as system, so permissions never hide a rule.
+4. **Build the record:** the pre-image with the Target (the changed columns) on top. See the next part.
+5. **Drop untouched rules:** an Update rule with triggering columns, none of which are in the Target, is left out. It isn't run or logged.
+6. **Run the chain:** by priority, then rule key. Each rule:
+   - evaluates its condition tree (AND/OR groups, nested);
+   - runs THEN or ELSE, top to bottom;
+   - **stages** its field changes, and commits them only when the whole rule succeeds. A rule that fails halfway leaves no half-done changes behind.
+   - Later rules read the committed changes of earlier ones.
+7. **Stop early:** when a rule with "Stop processing after match" matches, or a rule blocks.
+8. **Apply the result:**
+   - **Before save:** the changes are set on the Target, so they go into the same save. There is no extra update and no extra trigger. A block throws an error with the rule's message, and the save is rolled back.
+   - **After save:** the changes are written as one Update per identity (see "Who the rule runs as"). That Update can trigger Update rules again, and the recursion guard limits that.
+   - **Delete:** field changes are ignored, but a block still stops the delete.
+9. **Log:** one execution log row per rule run, depending on its log level.
 
-### Worked example: sample functions
+### The record images: before, changes and the full picture
 
-- **rs\_SampleCalculateDiscount:** revenue + employees → discount. Pure and safe to retry.
-- **rs\_SampleStampContacts:** writes text on an account's contacts. Has side effects, so it is mocked in tests and tried only once. Both samples must be registered again on Custom functions after a data reset.
+Dataverse only sends the columns that change, in the **Target**. A rule like "Total > 10,000" also needs Total when only Discount changed. The engine therefore merges:
 
-### Expressions (NCalc)
+`full record = pre-image (all columns, as before the save) + Target (the new values) on top`
 
-- Fields in brackets: `[creditlimit] * 0.1`.
-- Parent fields: `[parentcustomerid:account.creditlimit]`.
-- Built-in math: if, in, round, min, max, abs, pow. Names ignore case; round rounds half away from zero (2.5 → 3).
-- **Empty fields follow NCalc:** an empty field makes the result empty, and Set field then clears the column. `[quantity] * [unitprice]` with no quantity gives empty, not 0. To use 0, write it into the formula, e.g. `if([quantity] = null, 0, [quantity]) * [unitprice]`, or add the condition "Quantity is filled in".
-- Custom functions by name.
-- Publishing checks every expression. Errors block the release.
+| Event | Pre-image | Target | What the rule sees |
+| --- | --- | --- | --- |
+| Create | — | All set columns | Only the new values |
+| Update | The record before the save | The changed columns | The full record after the change |
+| Delete | The record before the delete | — | The record as it was |
 
-### Dataverse tables
+- **Changed** compares the merged value with the pre-image. "Status changed" is true only when this save sets Status to a different value.
+- **Multi-select choice:** Changed compares the set of options, so their order doesn't matter.
+- **Each rule sees its own changes first**, then earlier rules' changes, then the record.
+- In **Test & trace**, the real record you pick plays the pre-image and your sample values play the Target. That's why sample values count as changed columns.
 
-Rule Studio stores everything in its own tables: rule, rule version, conditions, actions, custom functions, lookup definitions, releases and execution logs. `RuleStudioApp/DeployDataModel/Program.cs` defines the full model.
+### Before save vs after save
 
-### Runtime and roles
+| | Before save | After save |
+| --- | --- | --- |
+| Dataverse stage | PreOperation, synchronous | PostOperation, asynchronous (system job) |
+| Inside the user's transaction | Yes | No |
+| Set field | Written into the same save, at no extra cost | A follow-up Update |
+| Block | Yes, the save is rolled back | No, and failures never stop the chain |
+| The user waits | Yes, so keep it fast | No |
+| Retries | At most 2, at most 1 s apart | At most 10, up to 60 s apart |
+| Failure | Block or Log and continue | Always logged and flagged for an admin |
 
-- **One engine plug-in** runs every published rule. Its steps update automatically on publish, rollback, or enable/disable.
-- **Before save** changes the record directly and can block. **After save** runs in the background.
-- **Rule Studio Author:** can create, edit, test, publish, roll back and import.
-- **Rule Studio Viewer:** read only.
-- Give either role together with Basic User.
+- **Rule of thumb:** use before save to validate and to set fields on the same record. Use after save for work on other records, such as tasks, webhooks or assignments.
+- **Plug-in time limit:** the 2-minute limit covers the whole chain. That's why paths, rows and retries have caps.
+
+### Following relations: field paths
+
+A **field path** starts at the record being saved and follows relations one **hop** at a time.
+
+- **Parent hop (N:1):** follows a lookup column up.
+  - `quote → account (customerid) → contact (primarycontactid) → emailaddress1`
+  - Each hop reads one record, by id, with only the column it needs.
+  - If a lookup is empty, the path ends with an empty value and the rule doesn't fail.
+  - A lookup that points to another table than the path expects (for example a customer that is a contact rather than an account) also gives empty.
+- **Child hop (1:N):** follows a relation down, to many rows: `quote → quotedetail (quoteid)`.
+  - A child path is a list, so a condition must say how to use it:
+    - **Any / All / None-of:** check a condition per child row. The trace shows "matched X of Y".
+    - **Count / Sum / Min / Max / Average:** one number, computed **by Dataverse** in one aggregate FetchXML query. The rows are never loaded.
+  - A child path without an aggregate is rejected at publish.
+- **Mixed paths:** parent hops first, then child hops, then more hops. For example: `quote → account → opportunities → opportunityproducts → amount`.
+  - The engine follows the parent hops record by record.
+  - From the first child hop on, the rest becomes **one FetchXML query** with inner link-entities.
+- **Empty sets:**
+  - All over no rows is true ("0 of 0"), and Any is false.
+  - Count gives 0, while Sum, Min, Max and Average give empty.
+- **Unsaved record:** on Create the record has no id yet, so child paths give no rows.
+- **Read once per save:** each parent record and column is read once and cached for the whole chain, so ten rules reading `account.creditlimit` cost one read. Child queries run per use.
+- **Expressions** use the same paths: `[parentcustomerid:account.creditlimit]`.
+
+| Limit | Value | Checked |
+| --- | --- | --- |
+| Hops per path | 5 | At publish and at run time |
+| Child rows per path (and lookup rows matched) | 4,999 | At run time; going over fails the rule |
+
+### How a lookup finds its answer
+
+Example: "Discount for quote" returns `Discount %` from the Discount table. The match is the quote's customer type and country.
+
+**1 · Read the values from the record being saved.** Each criterion gets its value from a field path (which can hop, like `quote → account → country`), a fixed value or an expression.
+
+**2 · Build one query against the table with the answers.** Every criterion becomes one filter, and all filters must hold (AND).
+
+- The query only returns **active rows**, and only the columns it needs.
+- It asks for one row more than the limit, to detect when it's crossed.
+
+| Criterion | Filter on the table with the answers |
+| --- | --- |
+| Equals | `column = value` |
+| In list | `column in (values)` |
+| Range | `min column ≤ value` and `max column > value`. An empty bound is open, so the upper bound is exclusive and ranges can chain (0–10,000, 10,000–50,000 …) without overlapping |
+| Is empty | `column is empty` |
+| + Empty matches all | Also matches rows where the column is empty (a wildcard row, such as "any country") |
+
+Two notes:
+
+- If the record's own value is empty, Equals and In list match rows where the column is empty.
+- An empty value against a range matches only rows whose bounds are empty.
+
+**3 · Pick one row.**
+
+| Rows found | Result |
+| --- | --- |
+| 0 | The **No match** policy: **Block** fails the rule with "No row … matches", **Use default** returns the default value, and **Skip** skips the condition or action that used the lookup |
+| 1 | Its return column |
+| More than 1 | The **Multiple matches** policy: **Most specific** takes the row with the fewest wildcards, then the first by sort column; **First by sort** takes the first row by sort column; **Error** fails the rule |
+
+**Most specific in practice:**
+
+| Customer type | Country | Discount % |
+| --- | --- | --- |
+| Gold | DK | 15 |
+| Gold | *(empty = any)* | 10 |
+| *(empty = any)* | *(empty = any)* | 0 |
+
+- A Gold quote from Denmark matches all three rows, and **15** wins because it has 0 wildcards.
+- Gold from Sweden gets **10**, and every other quote gets **0**.
+- That's a full discount matrix with a fallback, and no rule logic.
+
+**4 · Fresh every time.** The rows are read when the rule runs, not at publish. Changing a row in the Discount table takes effect on the next save. Changing the **definition** (criteria, columns, policies) takes effect when the rules that use it are published again, because they're compiled into the snapshot.
+
+**5 · Traceable.** The trace and the full-trace log show how many rows matched, which row won, how many wildcards it had, and which policy applied. **Test lookup** on the Lookup definitions page runs exactly this against a real record.
+
+### Who the rule runs as
+
+- **Calling user:** the rule reads, queries, calls functions and (after save) writes with the user's own permissions.
+  - A record the user can't read gives an empty value, and does not cause an error.
+  - Lookups and child aggregates only see the rows the user may see.
+- **System:** full permissions, whatever the user's role.
+- **Mixing them in one chain:**
+  - Rules next to each other with the same identity are evaluated together, and later rules still see earlier changes.
+  - Before save, all changes go into the one save.
+  - After save, the changes are written as one Update per identity: the system rules' columns as system, and the rest as the calling user.
+
+### Retries and failures
+
+- **Retry:** a failed attempt is thrown away completely, along with its staged changes, and the rule runs again from the start after the retry delay. Caps: before save at most 2 retries, at most 1 s apart. After save at most 10, up to 60 s apart.
+- **No retry when:**
+  - the rule blocked on purpose (Block save, or a lookup with No match = Block);
+  - the attempt already really called a function marked **not safe to retry**, so a task or webhook is never sent twice.
+- **After the last attempt:**
+  - **Before save, On failure = Block:** the save is stopped with "RULE.KEY: message".
+  - **Before save, Log and continue:** the failure is logged, and the chain and the save go on.
+  - **After save:** it can't block, so it is always logged, flagged for an admin, and the chain goes on.
+- **Function timeout:** a call that takes longer than its timeout counts as failed and its result is discarded. A synchronous call can't be stopped halfway, so the time is still spent.
+- **Values are converted on write:**
+  - whole numbers round half away from zero;
+  - text that's too long, or a number outside the column's range, fails with a readable message;
+  - a lookup value must point to one of the column's tables.
+
+### What gets logged, and when
+
+- **Rows:** one `rs_executionlog` row per rule run, written as system.
+- **Correlation ID:** every rule of one save shares the Dataverse **correlation ID**, and so does the after-save run of that save. Filter on it in Execution logs to see one save from start to end.
+- **Blocked saves leave no log row:** the block rolls back the save's transaction, including the log row. The outcome goes to the **plug-in trace log** instead, which is kept when the environment's plug-in trace setting is Exception or All.
+- **Not logged:** skipped rules (no triggering column changed) and inactive rules. Inactive rules aren't even loaded.
+
+## 14. Reference
+
+*Reference › Documentation*
+
+**TLDR:** This guide, inside Rule Studio, plus background for admins and developers.
+
+### This page
+
+- **Contents (left):** every section. Click one to jump to it.
+- **Sections (right):** the same text as `RuleStudioApp/docs/user-guide.md`.
+- To update it: edit that file, run `node guide.build.mjs` in the WebResources project, then build and deploy.
+
+### Where the data lives
+
+Rule Studio stores everything in its own Dataverse tables: rules, rule versions, conditions, actions, custom functions, lookup definitions, releases and execution logs. `RuleStudioApp/DeployDataModel/Program.cs` defines the full model.
+
+| Dataverse table | Used for |
+| --- | --- |
+| `rs_rule`, `rs_ruleversion` | Rules, live versions and drafts |
+| `rs_lookupdefinition` | Lookup definitions |
+| `rs_executionlog` | Run and failure history |
+| `rs_release` | Release history |
+
+### For developers: page standard
+
+Every page follows one layout standard; see `RuleStudioApp/docs/ui-standard.md`.
+
+| Page type | Pages |
+| --- | --- |
+| Record form | Rule editor, Custom function, Lookup definition, Release details, Execution detail |
+| List page | Rule library, Releases, Execution logs, Execution timeline, Test & trace, Custom functions, Lookup definitions, Environments, Documentation |
+| Dialog | Publish, Rollback, Restore |
+| Dashboard | Overview |
+
+- Tests fail the build if a page uses old layout patterns (`ui-standard.test.mjs`) or a new field has no help text.
+- All field help texts live in one shared file, so a field shows the same text on every page.

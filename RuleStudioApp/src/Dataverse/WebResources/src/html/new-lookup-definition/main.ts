@@ -3,17 +3,19 @@ import { DraftError, newCriterion, toDocument, toDraft } from "./criteriaModel";
 import { applyRole } from "../../shared/auth";
 import { goBackAfterSave, setLeaveGuard } from "../../shared/back";
 import { byId, fillSelect } from "../../shared/dom";
-import { pageParams } from "../../shared/nav";
+import { goBack, pageParams } from "../../shared/nav";
 import { describeError, setStatus, toast } from "../../shared/notify";
 import { applyStandard } from "../../shared/standard";
 import { loadTable, loadTableList } from "../../shared/tableMetadata";
 import { initWebApi } from "../../shared/xrm";
-import { loadLookup, saveLookup } from "../lookup-definitions/lookupData";
+import { confirmDeleteLookup, deleteLookup, loadLookup, saveLookup } from "../lookup-definitions/lookupData";
+import { renderMap } from "../lookup-definitions/mapView";
 import { MULTI_MATCH_OPTIONS, MultiMatch, NO_MATCH_OPTIONS, NoMatch } from "../lookup-definitions/policies";
-import { fixedInput, TEXT_TARGET } from "../rule-editor/fixedValue";
+import { decodeFixed, fixedInput, TEXT_TARGET } from "../rule-editor/fixedValue";
 import { disableAll } from "../rule-editor/valueEditor";
 
-import type { CriterionDraft } from "./criteriaModel";
+import type { CriterionDraft, ValueDraft } from "./criteriaModel";
+import type { CriterionValueSource } from "../../shared/formats";
 import type { ColumnInfo, TableName } from "../../shared/tableMetadata";
 import type { LookupDefinition } from "../lookup-definitions/lookupData";
 
@@ -51,6 +53,30 @@ function columnOptions(current: string, empty: string): { value: string; label: 
 
 function redrawCriteria(): void {
   renderCriteria(byId("criteria"), { drafts, recordTable: recordTable.value, columns, disabled: !author, redraw: redrawCriteria });
+  redrawMap();
+}
+
+/** The record-side value of a draft, or null while it is incomplete. */
+function draftSource(value: ValueDraft): CriterionValueSource | null {
+  if (value.source === "fieldPath") return value.path ? { type: "fieldPath", path: value.path } : null;
+  if (value.source === "expression") return value.expression.trim() ? { type: "expression", expression: value.expression.trim() } : null;
+  const fixed = decodeFixed(value.raw)[0];
+  return fixed === undefined ? null : { type: "fixed", value: fixed };
+}
+
+function draftValues(draft: CriterionDraft): ValueDraft[] {
+  if (draft.operator === "in") return draft.values;
+  return draft.operator === "isEmpty" ? [] : [draft.value];
+}
+
+function redrawMap(): void {
+  const criteria = drafts.map((d) => ({
+    operator: d.operator,
+    columns: d.operator === "range" ? [d.minColumn, d.maxColumn] : [d.column],
+    values: draftValues(d).map(draftSource).filter((s): s is CriterionValueSource => s !== null),
+    wildcard: d.operator !== "isEmpty" && d.emptyMatchesAll,
+  }));
+  byId("fieldMap").replaceChildren(renderMap({ recordTable: recordTable.value, lookupTable: lookupTable.value, returnColumn: returnColumn.value, criteria }));
 }
 
 function renderDefault(): void {
@@ -66,7 +92,7 @@ function renderDefault(): void {
 }
 
 function fillColumnSelects(): void {
-  fillSelect(returnColumn, columnOptions(returnColumn.value, columns.length ? "— choose a column —" : "Choose the lookup table first"));
+  fillSelect(returnColumn, columnOptions(returnColumn.value, columns.length ? "— choose a column —" : "Choose the table with the answers first"));
   fillSelect(sortColumn, columnOptions(sortColumn.value, "No sort column"));
 }
 
@@ -120,8 +146,8 @@ const snapshot = (): string => JSON.stringify([
 
 function required(): string | null {
   if (!nameInput.value.trim()) return "Enter a lookup name.";
-  if (!recordTable.value) return "Choose the table the lookup is evaluated for.";
-  if (!lookupTable.value) return "Choose the lookup table.";
+  if (!recordTable.value) return "Choose the record being saved.";
+  if (!lookupTable.value) return "Choose the table with the answers.";
   if (!returnColumn.value) return "Choose the return column.";
   if (Number(multiMatch.value) === MultiMatch.Firstbysort && !sortColumn.value) return "Choose a sort column for \"First by sort\".";
   return null;
@@ -150,6 +176,7 @@ async function save(): Promise<boolean> {
     toast(created ? "Lookup definition created." : "Lookup definition saved.");
     saved = snapshot();
     showTitle(nameInput.value.trim());
+    byId("cmdDelete").hidden = false;
     setStatus(statusLine(), "");
     return true;
   } catch (error) {
@@ -161,13 +188,33 @@ async function save(): Promise<boolean> {
   }
 }
 
+/** Deletes the saved definition and leaves the page; a lookup in use cannot be deleted. */
+async function remove(): Promise<void> {
+  if (!lookupId) return;
+  const button = byId<HTMLButtonElement>("cmdDelete");
+  try {
+    if (!(await confirmDeleteLookup(nameInput.value.trim() || "this lookup"))) return;
+    button.disabled = true;
+    await deleteLookup(lookupId);
+    toast("Lookup definition deleted.");
+    goBack();
+  } catch (error) {
+    setStatus(statusLine(), describeError("delete the lookup definition (it may be in use)", error), "error");
+  } finally {
+    button.disabled = !author;
+  }
+}
+
 function bind(): void {
   lookupTable.addEventListener("change", () => void loadColumns());
   recordTable.addEventListener("change", redrawCriteria);
   returnColumn.addEventListener("change", () => {
     defaultRaw = "";
     renderDefault();
+    redrawMap();
   });
+  // Fixed values and expressions change without a redraw of the grid.
+  byId("criteria").addEventListener("change", redrawMap);
   noMatch.addEventListener("change", renderDefault);
   byId("addCriterion").addEventListener("click", () => {
     drafts.push(newCriterion());
@@ -175,6 +222,7 @@ function bind(): void {
   });
   byId("save").addEventListener("click", () => void save());
   byId("cmdSaveClose").addEventListener("click", () => void goBackAfterSave(save));
+  byId("cmdDelete").addEventListener("click", () => void remove());
   setLeaveGuard({ dirty: () => author && snapshot() !== saved, save });
 }
 
@@ -190,6 +238,10 @@ async function load(): Promise<void> {
     fillSelect(recordTable, tableOptions(tables, lookup.criteria?.recordTable ?? ""));
     fillSelect(lookupTable, tableOptions(tables, lookup.lookupTable));
     fillForm(lookup);
+    byId("cmdDelete").hidden = false;
+  } else {
+    // A new definition starts with one empty criterion; remove it to match every row.
+    drafts = [newCriterion()];
   }
   await loadColumns();
 }

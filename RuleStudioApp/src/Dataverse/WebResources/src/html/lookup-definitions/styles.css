@@ -1,7 +1,6 @@
 @import "../../shared/rule-studio.css";
 
-.lookup-search { margin: 10px 0; width: 100%; }
-.lookup-card { margin-top: 10px; }
+.picker-card { margin-bottom: 16px; }
 .detail-heading { margin-bottom: 16px; }
 .detail-section { margin-top: 19px; }
 .criteria-list { margin: 0; padding-left: 18px; display: grid; gap: 5px; }

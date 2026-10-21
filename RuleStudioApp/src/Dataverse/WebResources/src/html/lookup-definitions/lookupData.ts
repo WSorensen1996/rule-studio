@@ -4,6 +4,7 @@ import { XrmQuery } from "@delegateas/xrmquery";
 
 import { uniqueBy } from "../../shared/data/unique";
 import { parseDocument } from "../../shared/formats";
+import { hostXrm } from "../../shared/xrm";
 
 import type { MatchCriteria } from "../../shared/formats";
 
@@ -84,6 +85,18 @@ export async function loadLookup(id: string): Promise<LookupDefinition> {
       x.rs_sortcolumn, x.rs_defaultvalue, x.rs_matchcriteria, x.rs_nomatchpolicy, x.rs_multimatchpolicy])
     .promise();
   return toDefinition(row as Row);
+}
+
+/** Asks before a delete; false outside the app (no dialog to ask with). */
+export async function confirmDeleteLookup(name: string): Promise<boolean> {
+  const xrm = hostXrm();
+  if (!xrm) return false;
+  const result = await xrm.Navigation.openConfirmDialog({
+    title: "Delete lookup definition",
+    text: `Delete "${name}"? This cannot be undone.`,
+    confirmButtonLabel: "Delete",
+  });
+  return result.confirmed;
 }
 
 export async function deleteLookup(id: string): Promise<void> {

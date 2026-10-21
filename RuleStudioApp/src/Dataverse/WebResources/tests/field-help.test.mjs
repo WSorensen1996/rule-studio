@@ -13,7 +13,7 @@ const pages = path.join(src, 'html');
 // Controls whose label says it all (names, descriptions, search boxes, plain dates).
 const TRIVIAL = new Set([
     'environments/bundleFile', 'execution-logs/fRule', 'execution-logs/fTable', 'execution-logs/fFrom', 'execution-logs/fTo',
-    'lookup-definitions/lookupSearch', 'new-lookup-definition/lookupName', 'new-lookup-definition/lookupDescription',
+    'custom-functions/functionPick', 'lookup-definitions/lookupPick', 'new-lookup-definition/lookupName', 'new-lookup-definition/lookupDescription',
     'publish-release/releaseDescription',
     'register-function/funcName', 'register-function/funcDescription', 'register-function/apiPickerSearch',
     'rule-editor/ruleName', 'rule-editor/ruleDesc', 'rule-library/librarySearch',

@@ -1,7 +1,7 @@
 import { loadFunctions, loadUsage } from "./functionData";
-import { functionCard, functionDetail } from "./functionView";
+import { functionDetail } from "./functionView";
 import { applyRole } from "../../shared/auth";
-import { byId, h } from "../../shared/dom";
+import { byId, fillSelect, h } from "../../shared/dom";
 import { openRecord } from "../../shared/nav";
 import { describeError, setStatus } from "../../shared/notify";
 import { applyStandard } from "../../shared/standard";
@@ -19,19 +19,21 @@ let author = false;
 
 function render(): void {
   byId("functionCount").textContent = `${functions.length} registered`;
-  const list = byId("functionList");
+  const picker = byId<HTMLSelectElement>("functionPick");
   const detail = byId("functionDetail");
+  const empty = byId("emptyState");
+  empty.hidden = functions.length > 0;
+  picker.disabled = functions.length === 0;
   if (functions.length === 0) {
     renderActivate();
-    list.replaceChildren(h("p", { className: "empty" }, "No functions registered yet. Register one with + Register function."));
+    picker.replaceChildren();
+    empty.textContent = "No functions registered yet. Register one with + Register function.";
     detail.replaceChildren(h("div", { className: "card pad muted" }, "Function details appear here once a function is registered."));
     return;
   }
   if (!functions.some((fn) => fn.id === selectedId)) selectedId = functions[0]?.id ?? "";
-  list.replaceChildren(...functions.map((fn) => functionCard(fn, fn.id === selectedId, () => {
-    selectedId = fn.id;
-    render();
-  })));
+  fillSelect(picker, functions.map((fn) => ({ value: fn.id, label: `${fn.name}${fn.enabled ? "" : " (inactive)"}` })));
+  picker.value = selectedId;
   const selected = functions.find((fn) => fn.id === selectedId);
   renderActivate(selected);
   if (!selected) return;
@@ -92,6 +94,10 @@ function start(): void {
   initWebApi();
   author = applyRole();
   byId("refresh").addEventListener("click", () => void refresh());
+  byId("functionPick").addEventListener("change", (event) => {
+    selectedId = (event.target as HTMLSelectElement).value;
+    render();
+  });
   byId("registerFunction").addEventListener("click", () => void openRegister());
   byId("cmdActivate").addEventListener("click", () => void toggleActive());
   void refresh();

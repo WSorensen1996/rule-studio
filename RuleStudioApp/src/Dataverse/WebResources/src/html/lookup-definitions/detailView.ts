@@ -1,18 +1,13 @@
 // The configuration panel for the selected lookup definition.
 import { criterionText, valueText } from "./criteriaText";
+import { renderMap } from "./mapView";
 import { MULTI_MATCH_OPTIONS, MultiMatch, NO_MATCH_OPTIONS, NoMatch, policyLabel } from "./policies";
 import { h, pill } from "../../shared/dom";
 import { findColumn, tableLabel } from "../../shared/tableMetadata";
 import { decodeFixed } from "../rule-editor/fixedValue";
 
 import type { LookupSummary } from "./lookupData";
-
-export interface DetailHandlers {
-  author: boolean;
-  onEdit: (lookup: LookupSummary) => void;
-  onDelete: (lookup: LookupSummary) => void;
-  onTest: (lookup: LookupSummary) => void;
-}
+import type { MapCriterion } from "./mapView";
 
 function readonlyField(label: string, value: HTMLElement | string): HTMLElement {
   return h("div", { className: "field" }, h("div", { className: "form-label" }, label), h("div", { className: "input readonly" }, value));
@@ -55,6 +50,16 @@ function criteriaBlock(lookup: LookupSummary): HTMLElement {
   return box;
 }
 
+function mapBlock(lookup: LookupSummary): HTMLElement {
+  const criteria: MapCriterion[] = (lookup.criteria?.criteria ?? []).map((c) => ({
+    operator: c.operator,
+    columns: c.operator === "range" ? [c.minColumn, c.maxColumn] : [c.column],
+    values: c.operator === "in" ? c.values : (c.operator === "isEmpty" ? [] : [c.value]),
+    wildcard: c.operator !== "isEmpty" && c.emptyMatchesAll === true,
+  }));
+  return renderMap({ recordTable: lookup.criteria?.recordTable ?? "", lookupTable: lookup.lookupTable, returnColumn: lookup.returnColumn, criteria });
+}
+
 function policies(lookup: LookupSummary): HTMLElement {
   const noMatch = h("div", {}, h("div", { className: "form-label" }, "If no rows match"),
     pill(policyLabel(NO_MATCH_OPTIONS, lookup.noMatchPolicy), lookup.noMatchPolicy === NoMatch.Block ? "warning" : "info"));
@@ -74,38 +79,24 @@ function policies(lookup: LookupSummary): HTMLElement {
   return h("div", { className: "field-grid detail-section" }, noMatch, multi);
 }
 
-function actions(lookup: LookupSummary, handlers: DetailHandlers): HTMLElement {
-  const edit = h("button", { className: "btn", attrs: { type: "button" } }, "Edit definition");
-  edit.disabled = !handlers.author;
-  if (!handlers.author) edit.title = "Requires the Rule Studio Author role.";
-  edit.addEventListener("click", () => handlers.onEdit(lookup));
-  const test = h("button", { className: "btn", attrs: { type: "button" } }, "⚗ Test lookup");
-  test.addEventListener("click", () => handlers.onTest(lookup));
-  const remove = h("button", { className: "btn", attrs: { type: "button" } }, "Delete");
-  remove.disabled = !handlers.author || lookup.usage > 0;
-  if (lookup.usage > 0) remove.title = "Used by conditions or actions. Remove those references first.";
-  else if (!handlers.author) remove.title = "Requires the Rule Studio Author role.";
-  remove.addEventListener("click", () => handlers.onDelete(lookup));
-  return h("div", { className: "detail-actions" }, edit, test, remove);
-}
-
 function usageText(usage: number): string {
   if (usage === 0) return "Not used by any condition or action yet.";
   return `Used in ${usage} place${usage === 1 ? "" : "s"} (conditions and actions, across all rule versions).`;
 }
 
-export function renderDetail(lookup: LookupSummary, handlers: DetailHandlers): HTMLElement {
+export function renderDetail(lookup: LookupSummary): HTMLElement {
   return h("div", { className: "card pad" },
     h("div", { className: "detail-heading" },
       h("div", { className: "rs-summary" }, h("p", { className: "rs-summary-text" }, "Lookup definition")),
       h("div", { className: "rs-title" }, h("h2", {}, lookup.name),
         lookup.description ? h("p", { className: "rs-desc" }, lookup.description) : null)),
     h("div", { className: "field-grid" },
-      tableField("Target Dataverse table", lookup.lookupTable),
+      tableField("Table with the answers", lookup.lookupTable),
       tableField("Return column", lookup.lookupTable, lookup.returnColumn || "—")),
     h("h3", { className: "detail-section" }, "Match criteria"),
     criteriaBlock(lookup),
+    h("h3", { className: "detail-section" }, "How the fields connect"),
+    mapBlock(lookup),
     policies(lookup),
-    h("p", { className: "muted t11 detail-section" }, usageText(lookup.usage)),
-    actions(lookup, handlers));
+    h("p", { className: "muted t11 detail-section" }, usageText(lookup.usage)));
 }

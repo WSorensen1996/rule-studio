@@ -28,13 +28,14 @@
 
 <p class="status-line" id="status" role="status" aria-live="polite">Loading functions…</p>
 
-<div class="split">
-  <div class="card">
-    <div class="card-head"><h2 class="h3">Available functions</h2><span class="pill info" id="functionCount">—</span></div>
-    <div class="card-body" id="functionList"></div>
+<div class="card pad picker-card">
+  <div class="field-grid g3">
+    <div class="field"><label class="form-label" for="functionPick">Custom function <span class="pill info" id="functionCount">—</span></label><select class="select" id="functionPick"></select></div>
   </div>
-  <div id="functionDetail"></div>
+  <p class="empty" id="emptyState" hidden></p>
 </div>
+
+<div id="functionDetail"></div>
 </main>
 <!--SCRIPT-->
 </body>
