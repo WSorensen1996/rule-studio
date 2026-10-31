@@ -40,3 +40,6 @@ RuleStudioApp/.pipelines/CopyUATToTest.yaml
 # Signing keys / certificates (each user generates their own via Setup/PostSetup)
 *.snk
 *.pfx
+
+# HyperFrames project for the README demo video (rendered copies live in media/)
+/video/

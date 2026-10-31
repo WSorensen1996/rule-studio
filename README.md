@@ -3,6 +3,12 @@
 A no-code rule engine for Dataverse / Dynamics 365. Business users write IF / THEN / ELSE rules on
 any table in a model-driven app; one generic plug-in runs the published rules when records are saved.
 
+<p align="center">
+  <a href="media/rule-studio-demo.mp4"><img src="media/rule-studio-demo.gif" alt="Rule Studio walkthrough: rule library, conditions, actions, custom functions and lookup tables, testing, versioning and releases" width="100%"></a>
+  <br>
+  <a href="media/rule-studio-demo.mp4">Watch the full-quality video (MP4, 79 s)</a>
+</p>
+
 - **Rule editor:** trigger (table, event, before or after save), nested AND/OR conditions, and
   actions that set fields, block the save, log a message or call a custom function.
 - **Value sources:** fixed values, field paths across lookups, NCalc expressions, lookup
