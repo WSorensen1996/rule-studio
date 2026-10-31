@@ -3,11 +3,7 @@
 A no-code rule engine for Dataverse / Dynamics 365. Business users write IF / THEN / ELSE rules on
 any table in a model-driven app; one generic plug-in runs the published rules when records are saved.
 
-<p align="center">
-  <a href="media/rule-studio-demo.mp4"><img src="media/rule-studio-demo.gif" alt="Rule Studio walkthrough: rule library, conditions, actions, custom functions and lookup tables, testing, versioning and releases" width="100%"></a>
-  <br>
-  <a href="media/rule-studio-demo.mp4">Watch the full-quality video (MP4, 79 s)</a>
-</p>
+![Rule editor: a rule read back in plain words, with its trigger, conditions and actions](media/rule-editor.jpg)
 
 - **Rule editor:** trigger (table, event, before or after save), nested AND/OR conditions, and
   actions that set fields, block the save, log a message or call a custom function.
@@ -19,6 +15,27 @@ any table in a model-driven app; one generic plug-in runs the published rules wh
 - **Releases:** validate and publish rules together, roll back a release, restore an older version.
 - **Execution logs and timeline:** see which rules ran on a save, in what order, and why.
 - **Environments:** export the published rules and import them elsewhere with a three-way merge.
+
+## Screenshots
+
+**Conditions:** field paths across parents and child records, nested AND/OR groups, and values
+from a lookup table.
+
+![Conditions with a nested OR group and a lookup value](media/conditions.jpg)
+
+**Lookup definitions:** keep prices, discounts or limits in a table the business maintains;
+rules read the matching row when they run.
+
+![Lookup definition that maps quote line fields to a price list item](media/lookup-definitions.jpg)
+
+**Test & trace:** run a draft against a real record and see each condition's actual value.
+Nothing is written.
+
+![Test and trace showing a blocked save and the value the lookup returned](media/test-and-trace.jpg)
+
+**Releases:** every publish is validated and recorded as a release that can be rolled back.
+
+![Releases and versions list](media/releases.jpg)
 
 ## Getting started
 
