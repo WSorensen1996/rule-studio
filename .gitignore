@@ -41,5 +41,5 @@ RuleStudioApp/.pipelines/CopyUATToTest.yaml
 *.snk
 *.pfx
 
-# HyperFrames demo video project (local only)
+# HyperFrames project for the README demo video (rendered copies live in media/)
 /video/
